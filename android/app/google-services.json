@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "444983347642",
+    "firebase_url": "https://arctic-pups.firebaseio.com",
+    "project_id": "arctic-pups",
+    "storage_bucket": "arctic-pups.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:444983347642:android:347d39e2912550c1",
+        "android_client_info": {
+          "package_name": "com.pandog.arctic_pups"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "444983347642-85ibn9uoi99jpurtb89v0032skiu6m3l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCvRrNRHe042asYAYYBNFvl3qAOkZ8ioE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "444983347642-85ibn9uoi99jpurtb89v0032skiu6m3l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "444983347642-vlm1vf35jhccedb5spa3fdh9jntm04mi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.pandog.arcticPups"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
