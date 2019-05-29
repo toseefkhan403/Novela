@@ -9,16 +9,19 @@ import 'package:arctic_pups/flight_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:arctic_pups/utils/drawer.dart';
 import 'package:arctic_pups/login_page.dart';
-import 'package:arctic_pups/auth_provider.dart';
-import 'package:arctic_pups/auth.dart';
-import 'package:arctic_pups/root_page.dart';
 import 'package:arctic_pups/bottom_nav_bar/fancy_tab_bar.dart';
 import 'package:arctic_pups/pages/home_page.dart';
 import 'package:arctic_pups/pages/profile_page.dart';
+import 'package:arctic_pups/services.dart';
+import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 
 Future<void> main() async {
-  runApp(App());
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(App());
+  });
 }
 
 class App extends StatelessWidget {
@@ -27,18 +30,31 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return   AuthProvider(
-      auth: Auth(),
-      child: MaterialApp(
-        title: 'Arctic Pups',
-        debugShowCheckedModeBanner: false,
-        home: HomeScreen(
-          key: myTabbedPageKey,
-        ),
-        theme: ThemeData(
-            primaryColor: kShrinePink300,
-            fontFamily: 'Raleway'
-        ),
+    FirebaseService();
+    return MaterialApp(
+      title: 'Arctic Pups',
+      debugShowCheckedModeBanner: false,
+      home: new StreamBuilder<FirebaseUser>(
+          stream: FirebaseAuth.instance.onAuthStateChanged,
+          builder: (BuildContext context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+
+              //Build appropriate splash screen here
+              return new Center(
+                child: CircularProgressIndicator(
+                ),
+              );
+            } else {
+              if (snapshot.hasData) {
+                return HomeScreen(key: myTabbedPageKey,);
+              }
+              return new LoginPage();
+            }
+          }
+      ),
+      theme: ThemeData(
+          primaryColor: kShrinePink300,
+          fontFamily: 'Raleway'
       ),
     );
   }
@@ -56,7 +72,6 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin{
 
-
   TabController tabController;
 
   @override
@@ -65,6 +80,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
     tabController = new TabController(vsync: this, length: 3);
     App.myTabbedPageKey.currentState.tabController.animateTo(1);
   }
+
 
   @override
   void dispose() {
@@ -103,8 +119,12 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
       );
   }
 
-
   Widget _buildBody() {
+
+    FirebaseAuth.instance.currentUser().then((user){
+      print('this is the uid ${user.uid}');
+    });
+
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Column(

@@ -1,7 +1,7 @@
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class FirebaseService {
   FirebaseService() {
@@ -23,21 +23,6 @@ class FirebaseService {
           databaseURL: 'https://arctic-pups.firebaseio.com/',
         ));
     print('this is the app $app');
-
   }
 
-  Stream<QuerySnapshot> getLocations() {
-    return Firestore.instance.collection('locations').snapshots();
-  }
-
-  Stream<QuerySnapshot> getCities() {
-    return Firestore.instance
-        .collection('cities')
-        .orderBy('newPrice')
-        .snapshots();
-  }
-
-  Stream<QuerySnapshot> getDeals() {
-    return Firestore.instance.collection('deals').snapshots();
-  }
 }

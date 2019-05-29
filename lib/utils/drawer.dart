@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:arctic_pups/utils/colors.dart';
-import 'package:arctic_pups/root_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:arctic_pups/login_page.dart';
 
 class drawer extends StatefulWidget {
   @override
@@ -76,8 +76,8 @@ class _drawerState extends State<drawer> {
           InkWell(
             onTap: (){
               FirebaseAuth.instance.signOut();
-              Navigator.pushReplacement(context, MaterialPageRoute(
-                  builder: (BuildContext context) => new RootPage()));
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => LoginPage()));
+
             },
             child: ListTile(
               title: Text('Logout'),
