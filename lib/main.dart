@@ -91,6 +91,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
   @override
   Widget build(BuildContext context) {
       return Scaffold(
+        resizeToAvoidBottomPadding: false,
         appBar: AppBar(
          /* bottom: TabBar(
             controller: tabController,
@@ -109,7 +110,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
           controller: tabController,
           children: <Widget>[
             HomePage(),
-            _buildBody(),
+            HomeScreenTopPart(),
             ProfilePage(),
           ]
           /*myTabs.map((Tab tab) {
@@ -118,48 +119,6 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
         ),
       );
   }
-
-  Widget _buildBody() {
-
-    FirebaseAuth.instance.currentUser().then((user){
-      print('this is the uid ${user.uid}');
-    });
-
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: Column(
-        children: <Widget>[
-          HomeScreenTopPart(),
-          HomeScreenServices(),
-          //      HomeScreenBottomPart(),
-        ],
-      ),
-    );
-  }
-}
-
-class HomeScreenServices extends StatelessWidget {
-
-  @override
-  Widget build(BuildContext context) {
-    List<Service> arr = new List();
-
-    arr.add(new Service(title: 'Pet Services',imagePath:"assets/images/dogCute.jpeg" ));
-    arr.add(new Service(title: 'Pet Grooming',imagePath:"assets/images/dogGroom.jpeg" ));
-    arr.add(new Service(title: 'Pet Vet' , imagePath: "assets/images/dogDoc.jpeg" ));
-    arr.add(new Service(title: 'Pet Luxury',imagePath:"assets/images/dogLux2.jpeg" ));
-
-
-    return  Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Container(
-        height: 210.0,
-        child: ServiceCard(arr),
-    ),
-    );
-
-  }
-
 }
 
 
@@ -167,6 +126,10 @@ const TextStyle dropDownLabelStyle =
 TextStyle(color: Colors.white, fontSize: 16.0);
 const TextStyle dropDownMenuItemStyle =
 TextStyle(color: Colors.black, fontSize: 16.0);
+
+bool isServicesSelected = true;
+double _animatedHeight = 210;
+double _animatedWidth = 672;
 
 class HomeScreenTopPart extends StatefulWidget {
   @override
@@ -176,26 +139,30 @@ class HomeScreenTopPart extends StatefulWidget {
 class _HomeScreenTopPartState extends State<HomeScreenTopPart> {
 
   var selectedLocationIndex = 0;
-  var isFlightSelected = true;
+
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        ClipPath(
-          clipper: CustomShapeClipper(),
-          child: Container(
-            height: 380.0,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [kShrinePink300, kShrinePink400],
-              ),
-            ),
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 50.0,
-                ),
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Column(
+        children: <Widget>[
+          Stack(
+            children: <Widget>[
+              ClipPath(
+                clipper: CustomShapeClipper(),
+                child: Container(
+                  height: 380.0,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [kShrinePink300, kShrinePink400],
+                    ),
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 50.0,
+                      ),
 //                StreamBuilder(
 //                  stream: app .locationsStream,
 //                  builder: (context, snapshot) {
@@ -248,110 +215,154 @@ class _HomeScreenTopPartState extends State<HomeScreenTopPart> {
 //                    );
 //                  },
 //                ),
-                SizedBox(
-                  height: 50.0,
-                ),
-                Text(
-                  'How can we\nhelp your pet?',
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                  height: 30.0,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 32.0),
-                  child: Material(
-                    elevation: 5.0,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(30.0),
-                    ),
-                    child: TextField(
-                      onChanged: (text) {
-                      },
-                      style: dropDownMenuItemStyle,
-                      cursorColor: kShrinePink300,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: 32.0, vertical: 14.0),
-                        suffixIcon: Material(
-                          elevation: 2.0,
+                      SizedBox(
+                        height: 50.0,
+                      ),
+                      Text(
+                        'How can we\nhelp your pet?',
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 30.0,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 32.0),
+                        child: Material(
+                          elevation: 5.0,
                           borderRadius: BorderRadius.all(
                             Radius.circular(30.0),
                           ),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          InheritedFlightListing(
-                                            child: FlightListingScreen(),
-                                          )));
+                          child: TextField(
+                            onChanged: (text) {
                             },
-                            child: Icon(
-                              Icons.search,
-                              color: kShrineBrown600,
+                            style: dropDownMenuItemStyle,
+                            cursorColor: kShrinePink300,
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 32.0, vertical: 14.0),
+                              suffixIcon: Material(
+                                elevation: 2.0,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(30.0),
+                                ),
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                InheritedFlightListing(
+                                                  child: FlightListingScreen(),
+                                                )));
+                                  },
+                                  child: Icon(
+                                    Icons.search,
+                                    color: kShrineBrown600,
+                                  ),
+                                ),
+                              ),
+                              border: InputBorder.none,
                             ),
                           ),
                         ),
-                        border: InputBorder.none,
                       ),
-                    ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          InkWell(
+                            child:ChoiceChip(
+                                Icons.portrait, "Services", isServicesSelected),
+                            onTap: () {
+                              setState(() {
+                                isServicesSelected = true;
+                                _animatedHeight =210;
+
+                                Future.delayed(Duration(milliseconds: 800),(){
+                                  setState(() {
+                                    _animatedWidth =672;
+                                  });
+                                });
+                              });
+                            },
+                          ),
+                          SizedBox(
+                            width: 20.0,
+                          ),
+                          InkWell(
+                            child: ChoiceChip(
+                                Icons.shopping_cart, "Products", !isServicesSelected),
+                            onTap: () {
+                              setState(() {
+                                isServicesSelected = false;
+                                Future.delayed(Duration(milliseconds: 800),(){
+                                  setState(() {
+                                    _animatedHeight = 0;
+                                  });
+                                });
+                                _animatedWidth = 0;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+
+                    ],
                   ),
                 ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    InkWell(
-                      child: StreamBuilder(
-                        stream: null,
-                        initialData: true,
-                        builder: (context, snapshot) {
-                          print('in hotel - ${snapshot.data}');
-                          return ChoiceChip(
-                              Icons.portrait, "Services", snapshot.data);
-                        },
-                      ),
-                      onTap: () {
-                      //  homeScreen .updateFlightSelection(true);
-                      },
-                    ),
-                    SizedBox(
-                      width: 20.0,
-                    ),
-                    InkWell(
-                      child: StreamBuilder(
-                        stream: null,
-                        initialData: true,
-                        builder: (context, snapshot) {
-                          print('in hotel - ${!snapshot.data}');
-                          return ChoiceChip(
-                              Icons.hotel, "Hotels", !snapshot.data);
-                        },
-                      ),
-                      onTap: () {
-                    //    homeScreen .updateFlightSelection(false);
-                      },
-                    ),
-                  ],
-                )
-              ],
-            ),
+              ),
+            ],
           ),
-        ),
-      ],
+
+          Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: _buildChildren(),
+          )
+        ],
+      ),
     );
   }
 }
 
+
+Widget _buildChildren(){
+  List<Service> arr = new List();
+
+  arr.add(new Service(title: 'Pet Services',imagePath:"assets/images/dogCute.jpeg" ));
+  arr.add(new Service(title: 'Pet Grooming',imagePath:"assets/images/dogGroom.jpeg" ));
+  arr.add(new Service(title: 'Pet Vet' , imagePath: "assets/images/dogDoc.jpeg" ));
+  arr.add(new Service(title: 'Pet Luxury',imagePath:"assets/images/dogLux2.jpeg" ));
+
+  return Column(
+      children: <Widget>[
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 800),
+          width: _animatedWidth,
+          height: _animatedHeight,
+          child: ServiceCard(arr),
+        ),
+
+  //products child here
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Container(
+            height: 210,
+              child: ServiceCard(arr)),
+        )
+      ]
+
+  );
+
+
+
+}
 class Service{
 
   final String title,imagePath;
@@ -368,17 +379,13 @@ class ServiceCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: (){
-       /* Scaffold
-            .of(context)
-            .showSnackBar(SnackBar(content: Text(index.toString())));*/
-
         switch(index){
 
           case 0:
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeScreen()));
             break;
           case 1:
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeScreenServices()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeScreen()));
 
             break;
           case 2:

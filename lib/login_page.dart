@@ -8,6 +8,9 @@ import 'pages/home_screen.dart';
 String globalPhone;
 DatabaseReference databaseReference = FirebaseDatabase.instance.reference().child("Users");
 
+//todo turn the button into the progress button
+//todo try showing snackbars on top?
+//todo adding shimmer loading list
 
 class LoginPage extends StatefulWidget {
 
