@@ -4,7 +4,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-
 class FirebaseService {
 
   FirebaseService() {
@@ -17,23 +16,23 @@ class FirebaseService {
         name: 'arctic-pups',
         options: Platform.isIOS
             ? const FirebaseOptions(
-          googleAppID: '1:444983347642:ios:518deca9f81df8c2',
-          gcmSenderID: '444983347642',
-          databaseURL: 'https://arctic-pups.firebaseio.com/',
-        )
+                googleAppID: '1:444983347642:ios:518deca9f81df8c2',
+                gcmSenderID: '444983347642',
+                databaseURL: 'https://arctic-pups.firebaseio.com/',
+              )
             : const FirebaseOptions(
-          googleAppID: '1:444983347642:android:347d39e2912550c1',
-          apiKey: 'AIzaSyCJS8-fAiq02J5CIg7MHgUWvDuwc7GV7SE',
-          databaseURL: 'https://arctic-pups.firebaseio.com/',
-        ));
-
+                googleAppID: '1:444983347642:android:347d39e2912550c1',
+                apiKey: 'AIzaSyCJS8-fAiq02J5CIg7MHgUWvDuwc7GV7SE',
+                databaseURL: 'https://arctic-pups.firebaseio.com/',
+              ));
   }
 
+  //some boiler-plate code
   static Future<String> createMountain() async {
     String accountKey = await _getAccountKey();
 
     var mountain = <String, dynamic>{
-      'name' : '',
+      'name': '',
       'created': '12th jan',
     };
 
@@ -62,9 +61,9 @@ class FirebaseService {
         .set(name);
   }
 
-  static Future<StreamSubscription<Event>> getNameStream(void onData(String name)) async {
+  static Future<StreamSubscription<Event>> getNameStream(
+      void onData(String name)) async {
     String accountKey = await _getAccountKey();
-    print(accountKey);
 
     StreamSubscription<Event> subscription = FirebaseDatabase.instance
         .reference()
@@ -83,21 +82,21 @@ class FirebaseService {
     return subscription;
   }
 
-  static Future<Query> queryMountains() async {
-    String accountKey = await _getAccountKey();
+  static Stream getNameStream2()  {
+    String uid;
+    FirebaseAuth.instance.currentUser().then((FirebaseUser user) => uid = user.uid);
 
     return FirebaseDatabase.instance
         .reference()
-        .child("accounts")
-        .child(accountKey)
-        .child("mountains")
-        .orderByChild("name");
+        .child("Users")
+        .child("iHvlDE4uWYg4GwUM9zXgsVIgg5o2")
+        .child("phoneNo")
+        .onValue;
   }
 
 }
 
-_getAccountKey() => FirebaseAuth.instance.currentUser().then((user) => user.uid);
-
-
-
-
+Future<String> _getAccountKey() async {
+  FirebaseUser user = await FirebaseAuth.instance.currentUser();
+  return user.uid;
+}

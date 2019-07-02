@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:arctic_pups/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:arctic_pups/login_page.dart';
+import 'package:arctic_pups/pages/login_page.dart';
 import 'package:arctic_pups/services.dart';
 
 class drawer extends StatefulWidget {

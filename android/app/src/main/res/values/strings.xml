@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="facebook_app_id">2297245910357396</string>
+    <string name="app_name">Celfie</string>
+    <string name="fb_login_protocol_scheme">fb2297245910357396</string>
+
+</resources>

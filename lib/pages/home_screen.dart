@@ -10,6 +10,6 @@ class HomeScreenHolder extends StatefulWidget {
 class _HomeScreenHolderState extends State<HomeScreenHolder> {
   @override
   Widget build(BuildContext context) {
-    return HomeScreen(key: App.myTabbedPageKey);
+    return HomeScreen();
   }
 }
