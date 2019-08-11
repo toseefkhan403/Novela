@@ -20,6 +20,8 @@ import 'package:oktoast/oktoast.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:persist_theme/persist_theme.dart';
 import 'package:provider/provider.dart';
+import 'package:arctic_pups/pages/camera_example_home.dart';
+import 'package:image_picker/image_picker.dart';
 
 //todo Take care of the bottomNavBar color while theme changing
 void main() {
@@ -39,6 +41,7 @@ final _model = ThemeModel();
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    initCameras();
     FirebaseService();
 
     return ListenableProvider<ThemeModel>(
@@ -79,16 +82,17 @@ class _RootPageState extends State<RootPage> {
 
   void _goToAppropriateScreen() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
-
     if (user != null) {
       print(user.providerData);
       List<UserInfo> list = user.providerData;
 
+      //todo catch Index exception
       //add fb logic here
       if (user.isEmailVerified ||
-          list[1].providerId == 'facebook.com' ||
-          list[0].providerId == 'facebook.com') {
+          list[0].providerId == 'facebook.com' ||
+          list[1].providerId == 'facebook.com') {
         setState(() {
+          print('setting homescreen');
           parent = HomeScreen();
         });
       } else {
@@ -139,7 +143,8 @@ class HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return AnimatedCrossFade(
-      firstChild: TutorialPage(),
+      firstChild:
+          Scaffold(resizeToAvoidBottomPadding: true, body: TutorialPage()),
       duration: Duration(milliseconds: 800),
       crossFadeState: _shouldGoToTutorial
           ? CrossFadeState.showFirst
@@ -157,13 +162,20 @@ class HomeScreenState extends State<HomeScreen>
             style: new TextStyle(color: kShrineBrown600),
             textAlign: TextAlign.center),
       ),*/
+        /*
         bottomNavigationBar: BottomNavyBar(
           selectedIndex: currentIndex,
           showElevation: true,
           onItemSelected: (index) => setState(() {
-                currentIndex = index;
-                pageController.animateToPage(index,
-                    duration: Duration(milliseconds: 300), curve: Curves.ease);
+                if (index != 2) {
+                  currentIndex = index;
+
+                  pageController.animateToPage(index,
+                      duration: Duration(milliseconds: 400),
+                      curve: Curves.ease);
+                }else if (index == 2){
+                  _clickMenu(context);
+                }
               }),
           items: [
             BottomNavyBarItem(
@@ -184,42 +196,36 @@ class HomeScreenState extends State<HomeScreen>
               inactiveColor: Colors.pinkAccent,
             ),
             BottomNavyBarItem(
-                icon: Icon(Icons.tag_faces),
-                title: Text('Hashtags'),
-                activeColor: Colors.blue,
-                inactiveColor: Colors.lightBlue),
-            BottomNavyBarItem(
                 icon: Icon(Icons.person),
                 title: Text('Profile'),
                 activeColor: Colors.red,
                 inactiveColor: Colors.redAccent),
           ],
-        ),
+        ),*/
 
-        /*FancyBottomNavigation(
-          tabs: [
-            TabData(iconData: Icons.home, title: "Home"),
-            TabData(iconData: Icons.search, title: "Search"),
-            TabData(iconData: Icons.shopping_cart, title: "Basket"),
-            TabData(iconData: Icons.shopping_cart, title: "Basket"),
-          ],
-          onTabChangedListener: (position) {
-            setState(() {
-//                currentPage = position;
-            });
-          }),*/
+        bottomNavigationBar: FancyBottomNavigation(
+            tabs: [
+              TabData(iconData: Icons.home, title: "Home"),
+              TabData(iconData: Icons.star, title: "Share"),
+              TabData(iconData: Icons.person, title: "Profile"),
+            ],
+            onTabChangedListener: (position) {
+              setState(() {
+                currentIndex = position;
+              });
+            }),
+        body: _getPage(currentIndex),
 
-        body: new PageView(
+        /*PageView(
           physics: NeverScrollableScrollPhysics(),
           controller: pageController,
           children: [
-            SharePage(),
             HomePage(),
-            ChatPage(),
             HashtagPage(),
             ProfilePage(),
           ],
-        ),
+        ),*/
+
       ),
     );
   }
@@ -230,13 +236,27 @@ class HomeScreenState extends State<HomeScreen>
         FirebaseDatabase.instance.reference().child('users').child(user.uid);
     DataSnapshot snapshot = await ref.once();
 
-    print(snapshot.value);
-
     if (snapshot.value == null) {
       setState(() {
         showTopToast("You should complete the tutorial first", context);
         _shouldGoToTutorial = true;
       });
+    }
+  }
+
+  Widget _getPage(int currentIndex) {
+    switch (currentIndex) {
+      case 0:
+        return HomePage();
+
+      case 1:
+        return SharePage();
+
+      case 2:
+        return ProfilePage();
+
+      default:
+        return HomePage();
     }
   }
 }

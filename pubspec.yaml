@@ -31,6 +31,7 @@ dependencies:
   intl: ^0.15.8
   google_sign_in: ^4.0.2
   firebase_database: ^3.0.3
+  firebase_storage: ^3.0.2
   shared_preferences: ^0.5.3+1
   bottom_navy_bar: 5.1.0
   fancy_bottom_navigation: 0.3.2
@@ -38,6 +39,11 @@ dependencies:
   flutter_facebook_login: ^2.0.1
   flutter_spinkit: ^3.1.0
   persist_theme: ^1.5.1
+  image_picker: ^0.6.0+10
+  camera: 0.5.2+2
+  video_player: 0.10.1+5
+  flutter_staggered_grid_view: ^0.3.0
+  image_cropper : ^1.0.2
 
 dev_dependencies:
   flutter_test:
@@ -58,3 +64,13 @@ flutter:
       fonts:
         - asset: assets/fonts/Oxygen-Regular.ttf
         - asset: assets/fonts/Oxygen-Bold.ttf
+
+
+    - family: DancingScript
+      fonts:
+        - asset: assets/fonts/DancingScript-Regular.ttf
+        - asset: assets/fonts/DancingScript-Bold.ttf
+
+    - family: Pacifico
+      fonts:
+        - asset: assets/fonts/Pacifico-Regular.ttf

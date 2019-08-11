@@ -9,8 +9,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 PageController pageController;
 BaseAuth baseAuth = Auth();
 
-//todo turn the button into the progress button
-//todo try showing snackbars on top?
 //todo adding shimmer loading list
 //todo add the user into db
 

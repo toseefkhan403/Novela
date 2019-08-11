@@ -63,7 +63,7 @@ class _HashtagPageState extends State<HashtagPage> {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           image: DecorationImage(
-            fit: BoxFit.fill,
+            fit: BoxFit.cover,
             image: NetworkImage(data['img']),
           ),
 
