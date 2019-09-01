@@ -12,7 +12,7 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="Celfie"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/icon">
 
         <activity
             android:name=".MainActivity"

@@ -142,7 +142,7 @@ class _GLoginState extends State<GLogin> {
             ),
           ),
 
-          //password Field
+          //password Field0xFF5AEAF1
           Container(
             margin: EdgeInsets.only(left: 32.0, right: 16.0),
             child: TextField(
@@ -150,7 +150,7 @@ class _GLoginState extends State<GLogin> {
               style: hintAndValueStyle,
               obscureText: true,
               decoration: new InputDecoration(
-                  fillColor: Color(0x3305756D),
+                  fillColor: Color(0xffabecd6),
                   filled: true,
                   contentPadding:
                       new EdgeInsets.fromLTRB(40.0, 30.0, 10.0, 10.0),
@@ -290,7 +290,7 @@ class _GLoginState extends State<GLogin> {
                         : Text(
                             'GOOGLE LOGIN',
                             style: TextStyle(
-                                color: Color(0xffF1EA94),
+                                color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Raleway'),
                           ),
@@ -348,7 +348,7 @@ class _GLoginState extends State<GLogin> {
                         : Text(
                             'FACEBOOK LOGIN',
                             style: TextStyle(
-                                color: Color(0xffF1EA94),
+                                color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Raleway'),
                           ),
@@ -519,7 +519,7 @@ class _SignInState extends State<SignIn> {
               style: hintAndValueStyle,
               obscureText: true,
               decoration: new InputDecoration(
-                  fillColor: Color(0x3305756D),
+                  fillColor: Color(0xffabecd6),
                   filled: true,
                   contentPadding:
                       new EdgeInsets.fromLTRB(40.0, 30.0, 10.0, 10.0),
@@ -539,7 +539,7 @@ class _SignInState extends State<SignIn> {
               style: hintAndValueStyle,
               obscureText: true,
               decoration: new InputDecoration(
-                  fillColor: Color(0x3305756D),
+                  fillColor: Color(0xffabecd6),
                   filled: true,
                   contentPadding:
                       new EdgeInsets.fromLTRB(40.0, 30.0, 10.0, 10.0),
@@ -618,7 +618,7 @@ class _SignInState extends State<SignIn> {
                         : Text(
                             'SIGN UP',
                             style: TextStyle(
-                                color: Color(0xffF1EA94),
+                                color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Raleway'),
                           ),
@@ -660,9 +660,9 @@ class _SignInState extends State<SignIn> {
                           Color(0xff434343),
                         ])),
                     child: Text(
-                      'back to login',
+                      'Back to login',
                       style: TextStyle(
-                          color: Color(0xffF1EA94),
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Raleway'),
                     ),
@@ -750,25 +750,24 @@ Widget roundedRectButton(String title, List<Color> gradient, bool isLoading) {
 }
 
 const List<Color> signInGradients = [
-  Color(0xFF0EDED2),
-  Color(0xFF03A0FE),
+  /*Color(0xFF0EDED2),
+  Color(0xFF03A0FE),*/
+  Colors.black,
+  Colors.black87
 ];
 
 const List<Color> signUpGradients = [
   /* Color(0xFFFF9945),
   Color(0xFFFc6076),*/
-  kShrinePink500,
+  /*kShrinePink500,
   kShrinePink600,
-  Colors.pinkAccent,
+  Colors.pinkAccent,*/
+  Colors.black,
+  Colors.black87
 ];
 
 const List<Color> orangeGradients = [
   Color(0xFFFF9844),
   Color(0xFFFE8853),
   Color(0xFFFD7267),
-];
-
-const List<Color> aquaGradients = [
-  Color(0xFF5AEAF1),
-  Color(0xFF8EF7DA),
 ];

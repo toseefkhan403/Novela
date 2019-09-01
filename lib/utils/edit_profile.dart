@@ -187,13 +187,15 @@ class _EditProfileState extends State<EditProfile> {
           gradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.topRight,
-        colors: aquaGradients,
+        colors: Theme.of(context).brightness == Brightness.light ? aquaGradients : [
+          Colors.black12,
+          Colors.black26,
+        ],
       )),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Material(
           elevation: 14.0,
-          color: Colors.white,
           borderRadius: BorderRadius.circular(12.0),
           shadowColor: Color(0x802196F3),
           child: Center(
@@ -353,7 +355,7 @@ class _EditProfileState extends State<EditProfile> {
                     controller: bioController,
                     style: hintAndValueStyle,
                     decoration: new InputDecoration(
-                        fillColor: Color(0x3305756D),
+                        fillColor: Color(0xffabecd6),
                         filled: true,
                         contentPadding:
                             new EdgeInsets.fromLTRB(40.0, 30.0, 10.0, 10.0),
@@ -369,42 +371,34 @@ class _EditProfileState extends State<EditProfile> {
                 Container(
                   margin: EdgeInsets.only(top: 32.0),
                   child: Center(
-                    child: InkWell(
+                    child: _isLoading ? SpinKitChasingDots(color: Colors.white) : InkWell(
                       onTap: _saveSecondPageInfo,
                       child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 36.0, vertical: 16.0),
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 15,
-                                    spreadRadius: 0,
-                                    offset: Offset(0.0, 32.0)),
-                              ],
-                              borderRadius: new BorderRadius.circular(36.0),
-                              gradient: LinearGradient(
-                                  begin: FractionalOffset.centerLeft,
-                                  stops: [
-                                    0.2,
-                                    1
-                                  ],
-                                  colors: [
-                                    Color(0xFF0EDED2),
-                                    Color(0xFF03A0FE),
-                                  ])),
-                          child: _isLoading
-                              ? SpinKitFadingCircle(color: Colors.white)
-                              : Text(
-                                  'SAVE',
-                                  style: TextStyle(
-                                      color: Color(0xffF1EA94),
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Raleway'),
-                                )),
+                        padding:
+                        EdgeInsets.symmetric(horizontal: 36.0, vertical: 16.0),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 15,
+                                  spreadRadius: 0,
+                                  offset: Offset(0.0, 32.0)),
+                            ],
+                            borderRadius: new BorderRadius.circular(36.0),
+                            border: Border.all(color: Colors.black87, width: 1.0)
+                        ),
+                        child: Text(
+                          'Save',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Raleway'),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                )
               ],
             ),
           ),
@@ -439,7 +433,10 @@ class _SettingsListState extends State<SettingsList> {
                       gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.topRight,
-                    colors: aquaGradients,
+                    colors: Theme.of(context).brightness == Brightness.light ? aquaGradients : [
+                      Colors.black12,
+                      Colors.black26,
+                    ],
                   )),
                   child: Center(child: CircularProgressIndicator()),
                 )
@@ -448,7 +445,10 @@ class _SettingsListState extends State<SettingsList> {
                       gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.topRight,
-                    colors: aquaGradients,
+                    colors: Theme.of(context).brightness == Brightness.light ? aquaGradients : [
+                      Colors.black12,
+                      Colors.black26,
+                    ],
                   )),
                   accountName: Text(
                     '$username',
@@ -475,7 +475,7 @@ class _SettingsListState extends State<SettingsList> {
               title: Text('Edit your profile'),
               leading: Icon(
                 Icons.person_outline,
-                color: Colors.black,
+                color: Theme.of(context).accentColor,
               ),
             ),
           ),
@@ -504,8 +504,15 @@ class _SettingsListState extends State<SettingsList> {
             ),
           ),
           InkWell(
-            onTap: () {
-              FirebaseAuth.instance.signOut();
+            onTap: () async {
+
+              FirebaseUser user = await FirebaseAuth.instance.currentUser();
+              await FirebaseDatabase.instance
+                  .reference()
+                  .child('token')
+                  .child(user.uid)
+                  .remove();
+              await FirebaseAuth.instance.signOut();
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (BuildContext context) => RootPage()));
             },
@@ -513,7 +520,7 @@ class _SettingsListState extends State<SettingsList> {
               title: Text('Logout'),
               leading: Icon(
                 Icons.exit_to_app,
-                color: kShrineBrown900,
+                color: Colors.white70,
               ),
             ),
           ),

@@ -13,13 +13,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:arctic_pups/utils/edit_profile.dart';
 
-class ProfilePage extends StatefulWidget {
+class ViewProfilePage extends StatefulWidget {
+  ViewProfilePage(this.uid);
+
+  final String uid;
+
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  _ViewProfilePageState createState() => _ViewProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ViewProfilePageState extends State<ViewProfilePage> {
   bool _isLoading = true;
+  bool _isFriendsLoading = false;
+  bool _isBlockLoading = false;
   String photoUrl, username, display_name, bio, flames, friends, postCount;
 
   @override
@@ -36,31 +42,12 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      SizedBox(
-                        width: 102.0,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 25.0, bottom: 25.0, left: 59.0),
-                        child: Text(username),
-                      ),
-                      SizedBox(
-                        width: 115.0,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => SettingsList()));
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(Icons.settings),
-                        ),
-                      )
-                    ],
+
+                  Padding(
+                    padding: const EdgeInsets.all(25.0),
+                    child: Text(username),
                   ),
+
                   //photo and stuff
                   Stack(
                     children: <Widget>[
@@ -145,9 +132,22 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
 
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+
+                      setState(() {
+                        _isFriendsLoading = true;
+                      });
+
+                      Future.delayed(Duration(seconds: 1), (){
+
+                        showTopToast('Friend request sent successfully', context);
+                        setState(() {
+                          _isFriendsLoading = false;
+                        });
+                      });
+                    },
                     splashColor: Colors.grey,
-                    child: Container(
+                    child: _isFriendsLoading ? SpinKitChasingDots(color: Colors.white): Container(
                       padding: EdgeInsets.symmetric(
                           horizontal: 100.0, vertical: 15.0),
                       decoration: BoxDecoration(
@@ -163,7 +163,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           border: Border.all(
                               color: Colors.black87, width: 1.0)),
                       child: Text(
-                        'Get Golden Likes',
+                        'Add to Friends',
                         style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
@@ -217,28 +217,27 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
   }
 
-  List<dynamic> friendsList = List(),
-      postsList = List();
+  List<dynamic> friendsList = List(), postsList = List();
 
   void _initData() async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
     DataSnapshot snapshot = await FirebaseDatabase.instance
         .reference()
         .child("users")
-        .child(user.uid)
+        .child(widget.uid)
         .once();
 
     DataSnapshot snapshot1 = await FirebaseDatabase.instance
         .reference()
         .child("user_friends")
-        .child(user.uid)
+        .child(widget.uid)
         .once();
 
     DataSnapshot snapshot2 = await FirebaseDatabase.instance
         .reference()
         .child("user_posts")
-        .child(user.uid)
+        .child(widget.uid)
         .once();
+
 
     DataSnapshot s =
     await FirebaseDatabase.instance.reference().child('posts').once();
@@ -247,21 +246,17 @@ class _ProfilePageState extends State<ProfilePage> {
       if (snapshot1 != null)
         friendsList =
             (snapshot1.value as Map<dynamic, dynamic>).values.toList();
-    } catch (e) {}
+    }catch (e){}
 
-    try {
+    try{
       if (snapshot2 != null)
+//        postsList = (snapshot2.value as Map<dynamic, dynamic>).values.toList();
         postsList = (s.value as Map<dynamic, dynamic>).values.toList();
 
       for(int i=0 ; i< postsList.length ; i++){
-        gridView.add(Container(color: Colors.white, child: Image.network(postsList[i]['photoUrl1'], fit: BoxFit.cover,),));
+        gridView.add(Container(color: Colors.white, child: Image.network(postsList[i]['photoUrl2'], fit: BoxFit.cover,),));
       }
-
-//      postsList = (snapshot2.value as Map<dynamic, dynamic>).values.toList();
-    } catch (e) {}
-
-    for (int i = 0; i < postsList.length; i++)
-      print(postsList[i]['photoUrl1']);
+    }catch (e){}
 
     setState(() {
       photoUrl = snapshot.value['photoUrl'];
@@ -276,4 +271,5 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   List<Widget> gridView = List();
+
 }

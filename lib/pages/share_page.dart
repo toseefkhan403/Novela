@@ -14,186 +14,32 @@ List<dynamic> friendList;
 
 void _loadList() async {
   DatabaseReference reference =
-  FirebaseDatabase.instance.reference().child('users');
+      FirebaseDatabase.instance.reference().child('users');
   DataSnapshot s = await reference.once();
 
   friendList = (s.value as Map<dynamic, dynamic>).values.toList();
 }
 
 class SharePage extends StatefulWidget {
+  final String challengeKey, fromUid;
+
+  SharePage({this.challengeKey, this.fromUid});
+
   @override
   _SharePageState createState() => _SharePageState();
 }
 
 class _SharePageState extends State<SharePage> {
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-            begin: FractionalOffset.topCenter,
-            stops: [0.2, 1],
-            colors: aquaGradients),
-      ),
-      child: Container(
-        margin: EdgeInsets.all(30.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25.0),
-          border: Border.all(
-              color: Colors.white, style: BorderStyle.solid, width: 2.5),
-          gradient: LinearGradient(
-              begin: FractionalOffset.topCenter,
-              stops: [0.2, 1],
-              colors: aquaGradients),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(28.0),
-              child: Text(
-                'Post to Celfie',
-                textAlign: TextAlign.left,
-                style: TextStyle(fontSize: 40.0, fontFamily: 'Pacifico'),
-              ),
-            ),
-            Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Column(
-                      children: <Widget>[
-                        ClipOval(
-                          child: Material(
-                            color: Colors.blue,
-                            child: InkWell(
-                              splashColor: Colors.red,
-                              child: SizedBox(
-                                width: 76,
-                                height: 76,
-                                child: Icon(
-                                  Icons.camera_alt,
-                                  color: Colors.white,
-                                  size: 40.0,
-                                ),
-                              ),
-                              onTap: () async {
-                                var image = await ImagePicker.pickImage(
-                                    source: ImageSource.camera);
-
-                                if (image != null) {
-                                  File croppedFile =
-                                  await ImageCropper.cropImage(
-                                    sourcePath: image.path,
-                                  );
-
-                                  //go to the post screen with the image
-                                  if (croppedFile != null) {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                PostStuff(image: croppedFile)));
-                                  }
-                                }
-                              },
-                            ),
-                          ),
-                        ),
-                        Text(
-                          'Camera',
-                          style:
-                              TextStyle(fontSize: 20.0, fontFamily: 'Pacifico'),
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: <Widget>[
-                        ClipOval(
-                          child: Material(
-                            color: Colors.blue,
-                            child: InkWell(
-                              splashColor: Colors.red,
-                              child: SizedBox(
-                                width: 76,
-                                height: 76,
-                                child: Icon(
-                                  Icons.photo,
-                                  color: Colors.white,
-                                  size: 40.0,
-                                ),
-                              ),
-                              onTap: () async {
-                                var image = await ImagePicker.pickImage(
-                                    source: ImageSource.gallery);
-
-                                if (image != null) {
-                                  File croppedFile =
-                                      await ImageCropper.cropImage(
-                                    sourcePath: image.path,
-                                  );
-
-                                  //go to the post screen with the image
-                                  if (croppedFile != null) {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                PostStuff(image: croppedFile)));
-                                  }
-                                }
-                              },
-                            ),
-                          ),
-                        ),
-                        Text(
-                          'Gallery',
-                          style:
-                              TextStyle(fontSize: 20.0, fontFamily: 'Pacifico'),
-                        )
-                      ],
-                    ),
-                  ),
-                ])
-          ],
-        ),
-      ),
-    );
-  }
+  TextEditingController disController;
+  bool _isLoading = false;
+  File image;
 
   @override
   void initState() {
     _loadList();
-    super.initState();
-  }
-}
-
-class PostStuff extends StatefulWidget {
-  PostStuff({this.image});
-
-  final File image;
-
-  @override
-  _PostStuffState createState() => _PostStuffState();
-}
-
-class _PostStuffState extends State<PostStuff> {
-  TextEditingController disController;
-  bool _isLoading = false;
-
-  @override
-  void initState() {
     disController = TextEditingController();
     super.initState();
   }
-
 
   @override
   void dispose() {
@@ -210,39 +56,84 @@ class _PostStuffState extends State<PostStuff> {
           gradient: LinearGradient(
               begin: FractionalOffset.topCenter,
               stops: [0.2, 1],
-              colors: aquaGradients),
+              colors: Theme.of(context).brightness == Brightness.light
+                  ? aquaGradients
+                  : [
+                      Colors.black,
+                      Colors.black87,
+                    ]),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Icon(Icons.close)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "Post an Image",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 26.0, fontFamily: 'Pacifico'),
-                  ),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Text(
+                "Post to Celfie",
+                textAlign: TextAlign.left,
+                style: TextStyle(fontSize: 24.0, fontFamily: 'Pacifico'),
+              ),
             ),
             SizedBox(
               width: 10.0,
               height: 25.0,
             ),
             Container(
-              child: Image.file(
-                widget.image,
-                fit: BoxFit.cover,
+              child: InkWell(
+                onTap: () async {
+                  var galleryImage = await ImagePicker.pickImage(
+                      source: ImageSource.gallery);
+
+                  if (galleryImage != null) {
+                    File croppedFile =
+                    await ImageCropper.cropImage(
+                      sourcePath: galleryImage.path,
+                    );
+
+                    if (croppedFile != null) {
+                      setState(() {
+                        image = croppedFile;
+                      });
+                    }
+                  }
+                },
+                child: image == null ? Container(
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Color(0xff434343),
+                            blurRadius: 10,
+                            spreadRadius: 0,
+                            offset: Offset(0.0, 10.0)),
+                      ],
+                      borderRadius: new BorderRadius.circular(26.0),
+                      gradient:
+                      LinearGradient(begin: FractionalOffset.centerLeft,
+                          stops: [
+                            0.2,
+                            1
+                          ], colors: [
+                            Color(0xff000000),
+                            Color(0xff434343),
+                          ])
+                ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(Icons.add_photo_alternate),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('Choose an Image'),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+          : Image.file(
+                  image,
+                  fit: BoxFit.cover,
+                ),
               ),
               width: 300.0,
               height: 300.0,
@@ -291,48 +182,74 @@ class _PostStuffState extends State<PostStuff> {
               ),
             ),
 
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: InkWell(
-                onTap: () {
-                  _clickMenu(context);
-                },
-                splashColor: Colors.red,
-                child: selectedPerson == null
-                    ? Row(
-                        children: <Widget>[
-                          Icon(Icons.tag_faces),
-                          SizedBox(
-                            width: 10.0,
-                            height: 0.0,
-                          ),
-                          Text(
-                            "Choose your friends to challenge",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontSize: 20.0, fontFamily: 'Raleway'),
-                          ),
-                        ],
-                      )
-                    : ListTile(
-                        trailing: Icon(Icons.keyboard_arrow_down),
-                        leading: CircleAvatar(
-                          backgroundImage:
-                              NetworkImage(selectedPerson['photoUrl']),
-                        ),
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              selectedPerson['username'],
-                              style: TextStyle(fontFamily: 'Raleway'),
+            widget.challengeKey == null || widget.fromUid == null
+                ? Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: InkWell(
+                      onTap: () {
+                        _clickMenu(context);
+                      },
+                      splashColor: Colors.red,
+                      child: selectedPerson == null
+                          ? Row(
+                              children: <Widget>[
+                                Icon(Icons.tag_faces),
+                                SizedBox(
+                                  width: 10.0,
+                                  height: 0.0,
+                                ),
+                                Text(
+                                  "Choose your friends to challenge",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                      fontSize: 18.5, fontFamily: 'Raleway'),
+                                ),
+                              ],
+                            )
+                          : ListTile(
+                              trailing: Icon(Icons.keyboard_arrow_down),
+                              leading: CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage(selectedPerson['photoUrl']),
+                              ),
+                              title: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    selectedPerson['username'],
+                                    style: TextStyle(fontFamily: 'Raleway'),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
-                        ),
-                      ),
-              ),
-            ),
+                    ),
+                  )
+                : StreamBuilder(
+                    stream: FirebaseDatabase.instance
+                        .reference()
+                        .child('users')
+                        .child(widget.fromUid)
+                        .onValue,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return ListTile(
+                          contentPadding: EdgeInsets.only(left: 15.0),
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                snapshot.data.snapshot.value['photoUrl']),
+                          ),
+                          title: Text(
+                            'You are replying to ' +
+                                snapshot.data.snapshot.value['username'] +
+                                '\'s challenge',
+                            style: TextStyle(fontFamily: 'Raleway'),
+                          ),
+                        );
+                      } else {
+                        return Container();
+                      }
+                    }),
 
             /*       Padding(
               padding: const EdgeInsets.all(15.0),
@@ -356,16 +273,16 @@ class _PostStuffState extends State<PostStuff> {
               ),
             ),
 */
-
-            Container(
+            image == null ? Container() : Container(
               margin: EdgeInsets.only(top: 32.0),
               child: Center(
-                child: InkWell(
+                child: _isLoading ? SpinKitChasingDots(color: Colors.white) : InkWell(
                   onTap: _uploadThePhoto,
                   child: Container(
                     padding:
                         EdgeInsets.symmetric(horizontal: 36.0, vertical: 16.0),
                     decoration: BoxDecoration(
+                      color: Colors.white,
                         boxShadow: [
                           BoxShadow(
                               color: Colors.black12,
@@ -374,24 +291,12 @@ class _PostStuffState extends State<PostStuff> {
                               offset: Offset(0.0, 32.0)),
                         ],
                         borderRadius: new BorderRadius.circular(36.0),
-                        gradient: LinearGradient(
-                            begin: FractionalOffset.centerLeft,
-                            stops: [
-                              0.2,
-                              1
-                            ],
-                            colors: [
-                              Color(0xFF0EDED2),
-                              Color(0xFF03A0FE),
-                            ])),
-                    child: _isLoading
-                        ? SpinKitFadingCircle(
-                            color: Colors.white,
-                          )
-                        : Text(
+                      border: Border.all(color: Colors.black87, width: 1.0)
+                        ),
+                    child: Text(
                             'Upload',
                             style: TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Raleway'),
                           ),
@@ -416,7 +321,9 @@ class _PostStuffState extends State<PostStuff> {
     showModalBottomSheet(
       context: context,
       builder: (context) => Material(
-            color: Colors.white,
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.white
+                : Colors.black,
             clipBehavior: Clip.antiAliasWithSaveLayer,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
@@ -498,77 +405,165 @@ class _PostStuffState extends State<PostStuff> {
   }
 
   void _uploadThePhoto() async {
-
-    if (selectedPerson != null) {
+    if (widget.challengeKey != null || widget.fromUid != null) {
+      //replying to a challenge
       String dis = disController.value.text;
 
       setState(() {
         _isLoading = true;
       });
 
-      String n = DateTime
-          .now()
-          .millisecondsSinceEpoch
-          .toString();
+      String n = DateTime.now().millisecondsSinceEpoch.toString();
       String t = 'photo$n';
       FirebaseUser user = await FirebaseAuth.instance.currentUser();
-      StorageReference ref =
-      FirebaseStorage.instance.ref().child('photos').child(user.uid).child(t);
-      StorageUploadTask uploadTask = ref.putFile(widget.image);
-      String imageURL = await (await uploadTask.onComplete).ref
-          .getDownloadURL();
+      StorageReference ref = FirebaseStorage.instance
+          .ref()
+          .child('photos')
+          .child(user.uid)
+          .child(t);
+      StorageUploadTask uploadTask = ref.putFile(image);
+      String imageURL =
+          await (await uploadTask.onComplete).ref.getDownloadURL();
 
       if (imageURL.isNotEmpty) {
-        String key = FirebaseDatabase.instance
+        String key =
+            FirebaseDatabase.instance.reference().child('posts').push().key;
+
+        print('THE Post KEY $key');
+
+        DataSnapshot d = await FirebaseDatabase.instance
             .reference()
             .child('challenges')
-            .push().key;
-
-        print('THE CHALLENGE KEY $key');
+            .child(widget.challengeKey)
+            .once();
 
         DatabaseReference dbRef =
-        FirebaseDatabase.instance.reference().child('challenges').child(key);
+            FirebaseDatabase.instance.reference().child('posts').child(key);
 
+        //set the post details here...
         await dbRef.set({
-          'caption': dis,
-          'challengeKey': key,
-          'challengerUid': user.uid,
-          'challengedUid': selectedPerson['uid'],
-          'photoUrl': imageURL,
-          'status': 'NOT_DECIDED'
+          'caption1': dis,
+          'caption2': d.value['caption'],
+          'postKey': key,
+          'challengeKey': widget.challengeKey,
+          'challengerUid': d.value['challengerUid'], //is user 2
+          'challengedUid': user.uid, //is user 1
+          'photoUrl1': imageURL,
+          'photoUrl2': d.value['photoUrl'],
+          'status': 'NOT_DECIDED',
+          'timestamp': n,
         });
+
+        //setting to user post node
+        await FirebaseDatabase.instance
+            .reference()
+            .child('user_posts')
+            .child(d.value['challengerUid'])
+            .child(key)
+            .set(key);
+
+        //setting to user post node
+        await FirebaseDatabase.instance
+            .reference()
+            .child('user_posts')
+            .child(d.value['challengedUid'])
+            .child(key)
+            .set(key);
 
         await FirebaseDatabase.instance
             .reference()
             .child('user_challenges')
             .child(user.uid)
-        .child(key)
-            .set({'to': selectedPerson['uid'], 'key': key});
+            .child(widget.challengeKey)
+            .remove();
 
         await FirebaseDatabase.instance
             .reference()
-            .child('user_challenges')
-            .child(selectedPerson['uid'])
-        .child(key)
-            .set({'from': user.uid, 'key': key});
+            .child('challenges')
+            .child(widget.challengeKey)
+            .child('status')
+            .set('ACCEPTED');
 
         setState(() {
           _isLoading = false;
-          showTopToast('Celfie uploaded successfully!', context);
+          showTopToast('Post uploaded successfully!', context);
 
           Navigator.of(context)
               .pushReplacement(MaterialPageRoute(builder: (c) => HomeScreen()));
         });
-      } else {
-        showTopToast(
-            "Your celfie could not be uploaded. Please try again", context);
-        setState(() {
-          _isLoading = false;
-        });
       }
     } else {
+      if (selectedPerson != null) {
+        String dis = disController.value.text;
 
-      showTopToast('Please select a friend', context);
+        setState(() {
+          _isLoading = true;
+        });
+
+        String n = DateTime.now().millisecondsSinceEpoch.toString();
+        String t = 'photo$n';
+        FirebaseUser user = await FirebaseAuth.instance.currentUser();
+        StorageReference ref = FirebaseStorage.instance
+            .ref()
+            .child('photos')
+            .child(user.uid)
+            .child(t);
+        StorageUploadTask uploadTask = ref.putFile(image);
+        String imageURL =
+            await (await uploadTask.onComplete).ref.getDownloadURL();
+
+        if (imageURL.isNotEmpty) {
+          String key = FirebaseDatabase.instance
+              .reference()
+              .child('challenges')
+              .push()
+              .key;
+
+          print('THE CHALLENGE KEY $key');
+
+          DatabaseReference dbRef = FirebaseDatabase.instance
+              .reference()
+              .child('challenges')
+              .child(key);
+
+          await dbRef.set({
+            'caption': dis,
+            'challengeKey': key,
+            'challengerUid': user.uid,
+            'challengedUid': selectedPerson['uid'],
+            'photoUrl': imageURL,
+            'status': 'NOT_DECIDED'
+          });
+
+          await FirebaseDatabase.instance
+              .reference()
+              .child('user_challenges')
+              .child(selectedPerson['uid'])
+              .child(key)
+              .set({
+            'from': user.uid,
+            'key': key,
+            'photoUrl': imageURL,
+            'type': 'challenge'
+          });
+
+          setState(() {
+            _isLoading = false;
+            showTopToast('Celfie uploaded successfully!', context);
+
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (c) => HomeScreen()));
+          });
+        } else {
+          showTopToast(
+              "Your celfie could not be uploaded. Please try again", context);
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      } else {
+        showTopToast('Please select a friend', context);
+      }
     }
   }
 }

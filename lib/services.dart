@@ -3,11 +3,14 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
 class FirebaseService {
-
   FirebaseService() {
     initFirebase();
+    firebaseCloudMessagingListeners();
   }
 
   initFirebase() async {
@@ -25,6 +28,42 @@ class FirebaseService {
                 apiKey: 'AIzaSyCJS8-fAiq02J5CIg7MHgUWvDuwc7GV7SE',
                 databaseURL: 'https://arctic-pups.firebaseio.com/',
               ));
+  }
+
+  void firebaseCloudMessagingListeners() async {
+    if (Platform.isIOS) iOS_Permission();
+
+    String token = await _firebaseMessaging.getToken();
+    String uid = await _getAccountKey();
+
+    if (uid != null && token != null) {
+      await FirebaseDatabase.instance
+          .reference()
+          .child('token')
+          .child(uid)
+          .set(token);
+    }
+
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print('on message $message');
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('on resume $message');
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('on launch $message');
+      },
+    );
+  }
+
+  void iOS_Permission() {
+    _firebaseMessaging.requestNotificationPermissions(
+        IosNotificationSettings(sound: true, badge: true, alert: true));
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
   }
 
   //some boiler-plate code
@@ -82,9 +121,11 @@ class FirebaseService {
     return subscription;
   }
 
-  static Stream getNameStream2()  {
+  static Stream getNameStream2() {
     String uid;
-    FirebaseAuth.instance.currentUser().then((FirebaseUser user) => uid = user.uid);
+    FirebaseAuth.instance
+        .currentUser()
+        .then((FirebaseUser user) => uid = user.uid);
 
     return FirebaseDatabase.instance
         .reference()
@@ -93,7 +134,6 @@ class FirebaseService {
         .child("phoneNo")
         .onValue;
   }
-
 }
 
 Future<String> _getAccountKey() async {

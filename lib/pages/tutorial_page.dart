@@ -26,6 +26,7 @@ class _TutorialPageState extends State<TutorialPage> {
 
   @override
   void dispose() {
+    pageController.dispose();
     super.dispose();
   }
 
@@ -33,7 +34,7 @@ class _TutorialPageState extends State<TutorialPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      body: new PageView(
+      body: PageView(
         scrollDirection: Axis.vertical,
         physics: NeverScrollableScrollPhysics(),
         controller: pageController,
@@ -42,7 +43,7 @@ class _TutorialPageState extends State<TutorialPage> {
           PageTwo(),
           PageThree(),
         ],
-      ),
+      )
     );
   }
 }
@@ -290,42 +291,34 @@ class _PageTwoState extends State<PageTwo> with SingleTickerProviderStateMixin {
           Container(
             margin: EdgeInsets.only(top: 32.0),
             child: Center(
-              child: InkWell(
+              child: _isLoading ? SpinKitChasingDots(color: Colors.white) : InkWell(
                 onTap: _saveSecondPageInfo,
                 child: Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 36.0, vertical: 16.0),
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 15,
-                              spreadRadius: 0,
-                              offset: Offset(0.0, 32.0)),
-                        ],
-                        borderRadius: new BorderRadius.circular(36.0),
-                        gradient: LinearGradient(
-                            begin: FractionalOffset.centerLeft,
-                            stops: [
-                              0.2,
-                              1
-                            ],
-                            colors: [
-                              Color(0xFF0EDED2),
-                              Color(0xFF03A0FE),
-                            ])),
-                    child: _isLoading
-                        ? SpinKitFadingCircle(color: Colors.white)
-                        : Text(
-                            'SAVE',
-                            style: TextStyle(
-                                color: Color(0xffF1EA94),
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Raleway'),
-                          )),
+                  padding:
+                  EdgeInsets.symmetric(horizontal: 36.0, vertical: 16.0),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 15,
+                            spreadRadius: 0,
+                            offset: Offset(0.0, 32.0)),
+                      ],
+                      borderRadius: new BorderRadius.circular(36.0),
+                      border: Border.all(color: Colors.black87, width: 1.0)
+                  ),
+                  child: Text(
+                    'Save',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Raleway'),
+                  ),
+                ),
               ),
             ),
-          ),
+          )
         ],
       ),
     );
@@ -493,12 +486,13 @@ class _PageThreeState extends State<PageThree> {
           Container(
             margin: EdgeInsets.only(top: 32.0),
             child: Center(
-              child: InkWell(
+              child: _isLoading ? SpinKitChasingDots(color: Colors.white) : InkWell(
                 onTap: _savePageThreeInfo,
                 child: Container(
                   padding:
-                      EdgeInsets.symmetric(horizontal: 36.0, vertical: 16.0),
+                  EdgeInsets.symmetric(horizontal: 36.0, vertical: 16.0),
                   decoration: BoxDecoration(
+                      color: Colors.white,
                       boxShadow: [
                         BoxShadow(
                             color: Colors.black12,
@@ -507,27 +501,15 @@ class _PageThreeState extends State<PageThree> {
                             offset: Offset(0.0, 32.0)),
                       ],
                       borderRadius: new BorderRadius.circular(36.0),
-                      gradient: LinearGradient(
-                          begin: FractionalOffset.centerLeft,
-                          stops: [
-                            0.2,
-                            1
-                          ],
-                          colors: [
-                            Color(0xFF0EDED2),
-                            Color(0xFF03A0FE),
-                          ])),
-                  child: _isLoading
-                      ? SpinKitFadingCircle(
-                          color: Colors.white,
-                        )
-                      : Text(
-                          'YOU\'RE ALL SET!',
-                          style: TextStyle(
-                              color: Color(0xffF1EA94),
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Raleway'),
-                        ),
+                      border: Border.all(color: Colors.black87, width: 1.0)
+                  ),
+                  child: Text(
+                    'You\'re all set!',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Raleway'),
+                  ),
                 ),
               ),
             ),
@@ -606,9 +588,11 @@ class PageOne extends StatelessWidget {
                     child: InkWell(
                       onTap: () {
                         //save info
+
+                        print('this psave is working');
                         pageController.animateToPage(1,
-                            duration: Duration(seconds: 1,milliseconds: 900),
-                            curve: Curves.elasticIn);
+                            duration: Duration(milliseconds: 100),
+                            curve: Curves.decelerate);
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
@@ -635,7 +619,7 @@ class PageOne extends StatelessWidget {
                         child: Text(
                           'NEXT',
                           style: TextStyle(
-                              color: Color(0xffF1EA94),
+                              color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Raleway'),
                         ),
