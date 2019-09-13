@@ -72,10 +72,10 @@ class _GLoginState extends State<GLogin> {
       if (email.contains('@')) {
         return true;
       } else {
-        showTopToast("Email address is wrong", context);
+        showTopToast("Email address is wrong");
       }
     } else {
-      showTopToast("Password is too short", context);
+      showTopToast("Password is too short");
     }
 
     return false;
@@ -185,7 +185,7 @@ class _GLoginState extends State<GLogin> {
                               MaterialPageRoute(
                                   builder: (context) => RootPage()));
                         } else {
-                          showTopToast("Email is not verified", context);
+                          showTopToast("Email is not verified");
                           setState(() {
                             _isLoading = false;
                           });
@@ -197,8 +197,7 @@ class _GLoginState extends State<GLogin> {
                         });
                       }
                     } catch (e) {
-                      showTopToast(
-                          "Incorrect email and password combination", context);
+                      showTopToast("Incorrect email and password combination");
                       setState(() {
                         print('setting isLoading false2');
                         _isLoading = false;
@@ -252,8 +251,7 @@ class _GLoginState extends State<GLogin> {
 
                     if (uid.isEmpty) {
                       showTopToast(
-                          'An unexpected error occurred. Please try again later',
-                          context);
+                          'An unexpected error occurred. Please try again later');
                       setState(() {
                         _isGloading = false;
                       });
@@ -315,8 +313,7 @@ class _GLoginState extends State<GLogin> {
 
                     if (uid.isEmpty) {
                       showTopToast(
-                          'An unexpected error occurred. Please try again later',
-                          context);
+                          'An unexpected error occurred. Please try again later');
                       setState(() {
                         _isFbLoading = false;
                       });
@@ -415,16 +412,16 @@ class _SignInState extends State<SignIn> {
     if (passwordController.value.text == passwordController2.value.text) {
       if (email.contains('@')) {
         if (password.length > 6) {
-          showTopToast("Signing you in...", context);
+          showTopToast("Signing you in...");
           return true;
         } else {
-          showTopToast("Password is too short", context);
+          showTopToast("Password is too short");
         }
       } else {
-        showTopToast("Email address is incorrect", context);
+        showTopToast("Email address is incorrect");
       }
     } else {
-      showTopToast("Passwords do not match", context);
+      showTopToast("Passwords do not match");
     }
 
     return false;
@@ -568,8 +565,7 @@ class _SignInState extends State<SignIn> {
 
                         if (uid.isNotEmpty) {
                           baseAuth.sendEmailVerification();
-                          showTopToast(
-                              'Verification email has been sent', context);
+                          showTopToast('Verification email has been sent');
                           setState(() {
                             _isLoading = false;
                           });
@@ -584,7 +580,7 @@ class _SignInState extends State<SignIn> {
                         });
                       }
                     } catch (e) {
-                      showTopToast('Oops.. an error occurred', context);
+                      showTopToast('Oops.. an error occurred');
                       setState(() {
                         print('setting isLoading false in catch');
                         _isLoading = false;

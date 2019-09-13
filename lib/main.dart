@@ -1,53 +1,42 @@
-import 'package:arctic_pups/pages/chat_page.dart';
-import 'package:arctic_pups/pages/hashtag_page.dart';
-import 'package:arctic_pups/utils/card_flip.dart';
 import 'package:arctic_pups/pages/share_page.dart';
-import 'package:arctic_pups/pages/tutorial_page.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:arctic_pups/utils/colors.dart';
-import 'package:arctic_pups/utils/cut_corners_border.dart';
 import 'package:arctic_pups/pages/login_page.dart';
 import 'package:arctic_pups/pages/home_page.dart';
-import 'package:arctic_pups/pages/profile_page.dart';
 import 'package:arctic_pups/services.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'pages/notifications_page.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:persist_theme/persist_theme.dart';
-import 'package:provider/provider.dart';
-import 'package:arctic_pups/pages/camera_example_home.dart';
-import 'package:image_picker/image_picker.dart';
 
-//todo Take care of the bottomNavBar color while theme changing
+//todo fix dialog
+//todo add premium purchase
+//todo design buy premium screen
+//todo design main screen
+//todo automatic call
+//todo add backdrop options
+//todo manage coins dialog
+//todo add hindi and english tabs
+//todo add stories
 void main() {
   runApp(
     OKToast(
       child: App(),
     ),
   );
-  /* SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-      .then((_) {
-      runApp(App());
-  });*/
 }
 
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    initCameras();
     FirebaseService();
 
     return MaterialApp(
       title: 'Celfie',
       theme: ThemeData(
           brightness: Brightness.dark,
+          primaryColor: Colors.black,
           backgroundColor: Colors.black,
           fontFamily: 'Raleway'),
       debugShowCheckedModeBanner: false,
@@ -91,7 +80,7 @@ class _RootPageState extends State<RootPage> {
         });
       } else {
         setState(() {
-          showTopToast("Verify Your Email address", context);
+          showTopToast("Verify Your Email address");
           parent = LoginPage();
         });
       }
@@ -115,19 +104,16 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   int currentIndex = 0;
-  bool _shouldGoToTutorial = false;
 
   @override
   void initState() {
+    _isFirstTimeLogin();
     super.initState();
-    _checkIfTutorialIsNeeded();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _shouldGoToTutorial
-        ? TutorialPage()
-        : Scaffold(
+    return Scaffold(
             resizeToAvoidBottomPadding: false,
             bottomNavigationBar: BottomNavigationBar(
                 selectedItemColor: Colors.white,
@@ -149,29 +135,12 @@ class HomeScreenState extends State<HomeScreen>
                       backgroundColor: Colors.black,
                       title: Text('Home')),
                   BottomNavigationBarItem(
-                      icon: Icon(Icons.add_circle), title: Text('Share')),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.notifications_active),
-                      title: Text('Notifications')),
+                      icon: Icon(Icons.add_circle), title: Text('Add new Story')),
                   BottomNavigationBarItem(
                       icon: Icon(Icons.person), title: Text('Profile')),
                 ]),
             body: _getPage(currentIndex),
           );
-  }
-
-  void _checkIfTutorialIsNeeded() async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    DatabaseReference ref =
-        FirebaseDatabase.instance.reference().child('users').child(user.uid);
-    DataSnapshot snapshot = await ref.once();
-
-    if (snapshot.value == null) {
-      setState(() {
-        showTopToast("You should complete the tutorial first", context);
-        _shouldGoToTutorial = true;
-      });
-    }
   }
 
   Widget _getPage(int currentIndex) {
@@ -183,13 +152,21 @@ class HomeScreenState extends State<HomeScreen>
         return SharePage();
 
       case 2:
-        return NotificationsPage();
-
-      case 3:
-        return ProfilePage();
+        return HomePage();
 
       default:
         return HomePage();
+    }
+  }
+
+  _isFirstTimeLogin() async {
+
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    DataSnapshot snapshot = await FirebaseDatabase.instance.reference().child('users').child(user.uid).child('points').once();
+
+    if (snapshot.value == null){
+      //first time user
+      FirebaseDatabase.instance.reference().child('users').child(user.uid).child('points').set(200);
     }
   }
 }
@@ -199,7 +176,7 @@ List<Color> aquaGradients = [
   Color(0xFF8EF7DA),
 ];
 
-showTopToast(String text, BuildContext context) {
+showTopToast(String text) {
   Widget widget = Container(
     decoration: BoxDecoration(
 //      color: Colors.grey,

@@ -25,6 +25,9 @@
         }
       ],
       "services": {
+
+        "admob_app_id": "ca-app-pub-4857431878844198~9332060381",
+
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
