@@ -19,35 +19,87 @@ addTheMessagesToTheDb() {
 
   List<ChatMessages> episode3List = List();
 
-  //YOU HAVE TO EDIT THIS PART ONLY EVERYTHING ELSE IS AUTOMAGIC
-  episode3List.add(ChatMessages(content: 'Kaha ho yar aap? Kabse wait kar rahi hu.. ', sent_by: 'Vishakha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Aapne bola tha jab msg karu tab nikalna, kabse taiyaar bethi hu mai', sent_by: 'Vishakha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'tumhare aane ki taiyaari m hi laga tha baby ;)', sent_by: 'Raj1', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Nahi ab mera mann nahi hai', sent_by: 'Vishakha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'aise nahi hota.. just come.. tumhara mann aur mood m dekh lunga', sent_by: 'Raj1', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'no, m not comin ab. M gussa hu aapse', sent_by: 'Vishakha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'tum na kch surprise rehne nahi deti ho.', sent_by: 'Raj1', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'https://firebasestorage.googleapis.com/v0/b/arctic-pups.appspot.com/o/novella_photos%2F1568227247609?alt=media&token=0d0e5341-7949-420f-b744-7eea5ab52154', sent_by: 'Raj1', type: 'image' ));
-  episode3List.add(ChatMessages(content: 'Abhi bhi gussa ho?', sent_by: 'Raj1', type: 'text' ));
-  episode3List.add(ChatMessages(content: ':o OMGG!!!! I’m speechless!', sent_by: 'Vishakha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'baaki ka surprise yaha aake milega ;)', sent_by: 'Raj1', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'reachin in 10 mins', sent_by: 'Vishakha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Love you baby <3', sent_by: 'Raj1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Vishaka's chat with her bestfriend Neha", sent_by: 'Raj1', type: 'msg' ));
+
+  episode3List.add(ChatMessages(content: 'hi babe, aayi kyu nahi aaj? ', sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: 'Mat pooch yar dimag kharab hua hua hai mera', sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: 'Raj ke saath ladaayi hui?', sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: 'Nahi yar', sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: 'Toh phir?', sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: 'Tujhe mene btaya thya na that he has shifted to a new flat', sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: 'Haa?', sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: 'Vaha koi ladki hai, bin baat ke chep ho rahi hai isse.', sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: 'Subah se toh do baar aa bhi chuki uske ghar mai', sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: 'Bahot gussa aa raha hai mujhe muh todd dungi jaake iska kamini saali', sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: 'Vishakha shaant hoja yr', sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: 'Dekh direct action lene ka koi faeda nahi hai.', sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: 'Toh phir? Bata kya karu', sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: 'Uske ghar ke paas, jaha wo rehti hai waha jaa and dekh', sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: 'Pehle pata karle ki hai kon, kya karti hai kaha rehti hai exact', sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: "uske baad we'll see how to treat that bitch", sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Alright. Mai jaati hu waha kal and then I'll let u knw", sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "yep.. abhi soja DW gn", sent_by: 'Neha', type: 'text' ));
 
   episode3List.add(ChatMessages(content: 'Next Day', sent_by: 'Raj1', type: 'msg' ));
+  episode3List.add(ChatMessages(content: 'Kaha pe hai tu', sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: 'Just reached here. Raj ke ghar ke backside pe jaari hu', sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: 'okay be careful', sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: 'kya hua? bol kch', sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Vishakhaaa?", sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Yaha pe koi ghar nahi hai :| ", sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "matlab???", sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: "https://www.thehindu.com/society/history-and-culture/249kc7/article26495936.ece/ALTERNATES/FREE_960/11NDMPMETROCAPITALCHECKTEMPLEMOSQUEBSZM", sent_by: 'Vishakha1', type: 'image'));
+  episode3List.add(ChatMessages(content: 'whatttt???', sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: 'yes.. Jesa Raj ne btaya tha waha to koi ghar hai hi nhi', sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: 'Ye hai wo jagah. Yha rehti hogi kya? :|', sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "I'm speechless", sent_by: "Vishakha1", type: 'text' ));
+  episode3List.add(ChatMessages(content: 'So am I', sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: 'Raj k flat k side m ek ghar h, waha jaake poochti hu', sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "haa.. yeh sahi rahega", sent_by: 'Neha', type: 'text' ));
 
-  episode3List.add(ChatMessages(content: 'You made me feel so special yesterday', sent_by: 'Vishakha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'you are special, my love<3', sent_by: 'Raj1', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Abhi kya kar rahe ho?', sent_by: 'Vishakha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'ummm… ek min. I will be back', sent_by: 'Raj1', type: 'text' ));
-  episode3List.add(ChatMessages(content: '??', sent_by: 'Vishakha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'someone’s at the door', sent_by: 'Raj1', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'After 20 minutes', sent_by: 'Raj1', type: 'msg' ));
-  episode3List.add(ChatMessages(content: 'kon tha?', sent_by: 'Vishakha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Neighbour, ek ladki thi, Rubi.Ghar k peeche hi rehti h.She introduced herself, friendly hai', sent_by: 'Raj1', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Zada friendly na ho tbhi theek hai', sent_by: 'Vishakha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'haha ok love ;*', sent_by: 'Raj1', type: 'text' ));
+  /*episode3List.add(ChatMessages(content: 'EPISODE 3', sent_by: 'Raj1', type: 'msg' ));
+/*episode3List.add(ChatMessages(content: 'EPISODE 3', sent_by: 'Raj1', type: 'msg' ));
 
+  episode3List.add(ChatMessages(content: "Mai baat kr chuki hu unse...", sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "I went to her place and bataaya ki mera friend hai Raj, jo recently side wale flat m shift hua hai ", sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Unka reaction bilkul b accha nahi tha", sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "As in?", sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: "weird tha yar.. As if nahi lena chahiye tha", sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Mene bola ki yaha pe ek ladki hai Rubi wo kidhar rehti hai? ", sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Unhone kaha ki jaha aap shift hue ho wahi par", sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Matlab pehle wo uss ghar m rent pe rehti thi?", sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Nahi", sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Phir???", sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: "bolll", sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: "She committed suicide 2 years back in the same flat", sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "DAMNNNNN", sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Raj? Did you tell him all this?", sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Wahi jaa rahi hu.. ttyl ", sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Ok", sent_by: 'Neha', type: 'text' ));
+
+  episode3List.add(ChatMessages(content: 'After knowing all this, Raj left that flat and shifted to an other place', sent_by: 'Raj1', type: 'msg' ));
+
+  episode3List.add(ChatMessages(content: 'THE END', sent_by: 'Raj1', type: 'msg' ));*/
+  episode3List.add(ChatMessages(content: "Mai baat kr chuki hu unse...", sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "I went to her place and bataaya ki mera friend hai Raj, jo recently side wale flat m shift hua hai ", sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Unka reaction bilkul b accha nahi tha", sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "As in?", sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: "weird tha yar.. As if nahi lena chahiye tha", sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Mene bola ki yaha pe ek ladki hai Rubi wo kidhar rehti hai? ", sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Unhone kaha ki jaha aap shift hue ho wahi par", sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Matlab pehle wo uss ghar m rent pe rehti thi?", sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Nahi", sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Phir???", sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: "bolll", sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: "She committed suicide 2 years back in the same flat", sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "DAMNNNNN", sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Raj? Did you tell him all this?", sent_by: 'Neha', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Wahi jaa rahi hu.. ttyl ", sent_by: 'Vishakha1', type: 'text' ));
+  episode3List.add(ChatMessages(content: "Ok", sent_by: 'Neha', type: 'text' ));
+
+  episode3List.add(ChatMessages(content: 'After knowing all this, Raj left that flat and shifted to an other place', sent_by: 'Raj1', type: 'msg' ));
+
+  episode3List.add(ChatMessages(content: 'THE END', sent_by: 'Raj1', type: 'msg' ));*/
 
 
   for (int i = 0; i < episode3List.length ; i++) {
@@ -57,7 +109,7 @@ addTheMessagesToTheDb() {
         .reference()
         .child('episodes')
         .child('The unknown girl') //title of the story
-        .child('episode1') //episodeNumber
+        .child('episode2') //episodeNumber
         .child(episode3List[i].timestamp.toString())
         .set({
       'content': episode3List[i].content,

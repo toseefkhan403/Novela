@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:arctic_pups/pay_us_money.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
@@ -69,21 +70,45 @@ class _ImageStatefulWidgetState extends State<ImageStatefulWidget> {
                 child: Hero(
                   tag: widget.data['content'].toString(),
                   child: _isUnlocked
-                      ? Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Image.network(
-                      widget.data['content'],
-                      fit: BoxFit.cover,
-                    ),
+                      ? ClipRRect(
+                        borderRadius: new BorderRadius.circular(20.0),
+                        child: FadeInImage.assetNetwork(
+                          placeholder: 'assets/loading.gif',
+                          image: widget.data['content'],
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                      : Stack(
+                    children: <Widget>[
+
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(20.0),
+                        child: Container(
+                          child: Container(
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaY: 22.0, sigmaX: 22.0),
+                              child: Container(
+                                color: Colors.white.withOpacity(0.0),
+                              ),
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                          image: DecorationImage(image: NetworkImage(widget.data['content'],), fit: BoxFit.cover),
+                          ),
+                        ),
+                      ),
+
+                      Center(
+                        child: Text(
+                          'Tap to unlock',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
                   )
-                      : Center(
-                    child: Text(
-                      'Tap to unlock',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
+
                 ),
               ),
             )

@@ -96,9 +96,9 @@ class _GLoginState extends State<GLogin> {
         children: <Widget>[
           Center(
             child: Image.asset(
-              'assets/images/dogCute.jpeg',
-              width: 100.0,
+              'assets/images/n.jpg',
               height: 100.0,
+              width: 100.0,
               fit: BoxFit.cover,
             ),
           ),
@@ -457,7 +457,7 @@ class _SignInState extends State<SignIn> {
                 Container(
                   margin: EdgeInsets.only(top: 48.0),
                   child: Text(
-                    'Sign Up \nfor Celfie.',
+                    'Sign Up \nfor Novelle.',
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       letterSpacing: 3,

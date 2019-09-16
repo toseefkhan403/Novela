@@ -3,11 +3,11 @@ import 'package:arctic_pups/utils/appbar_painter.dart';
 import 'package:flutter/material.dart';
 
 class DefaultAppBar extends StatefulWidget implements PreferredSizeWidget {
-  final String title;
-  final int totalEpisodes, episodeNow, episodeNo;
+  final String title, storyImage;
+  final int totalEpisodes, episodeNo;
 
   DefaultAppBar(
-      this.title, this.episodeNow, this.totalEpisodes, this.episodeNo);
+      this.title, this.totalEpisodes, this.episodeNo, this.storyImage);
 
   @override
   Size get preferredSize => Size.fromHeight(56.0);
@@ -128,7 +128,8 @@ class _DefaultAppBarState extends State<DefaultAppBar>
                                               builder: (c) => ViewChats(
                                                   widget.title,
                                                   widget.episodeNo - 1,
-                                                  widget.totalEpisodes)));
+                                                  widget.totalEpisodes,
+                                              widget.storyImage)));
                                     }
                                   }),
                               Chip(
@@ -147,7 +148,8 @@ class _DefaultAppBarState extends State<DefaultAppBar>
                                               builder: (c) => ViewChats(
                                                   widget.title,
                                                   widget.episodeNo + 1,
-                                                  widget.totalEpisodes)));
+                                                  widget.totalEpisodes,
+                                              widget.storyImage)));
                                     }
                                   }),
                             ],

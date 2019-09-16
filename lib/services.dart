@@ -149,7 +149,22 @@ class FirebaseService {
       print('Response code ${responseData.toString()}');
 
       if(responseData['STATUS'].toString() == "TXN_SUCCESS"){
-        _addPoints();
+
+        switch(responseData['TXNAMOUNT'].toString()) {
+
+          case "9.00":
+            _addPoints(100);
+            break;
+
+          case "99.00":
+            _addPoints(1200);
+            break;
+
+          case "499.00":
+            _addPoints(6000);
+            break;
+
+        }
       }
 
       /*
@@ -162,7 +177,7 @@ class FirebaseService {
 
 }
 
-_addPoints() async {
+_addPoints(int boughtPoints) async {
 
   FirebaseUser user = await FirebaseAuth.instance.currentUser();
   DataSnapshot snapshot = await FirebaseDatabase.instance
@@ -173,7 +188,7 @@ _addPoints() async {
       .once();
   int currentPoints = snapshot.value;
 
-  currentPoints += 40;
+  currentPoints += boughtPoints;
   FirebaseDatabase.instance
       .reference()
       .child('users')
@@ -181,7 +196,7 @@ _addPoints() async {
       .child('points')
       .set(currentPoints);
 
-  showTopToast('Payment completed successfully! \n 40 points added to your account');
+  showTopToast('Payment completed successfully! \n $boughtPoints points added to your account');
 
 }
 

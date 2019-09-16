@@ -52,9 +52,23 @@ class _CallState extends State<Call> {
       body: Container(
           color: Colors.black,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  'Incoming call',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 17.0),
+                ),
+              ),
+
+              SizedBox(
+                height: 50.0,
+              ),
+
               Text(
                 '${widget.data['sent_by']}',
                 style: TextStyle(
@@ -62,48 +76,60 @@ class _CallState extends State<Call> {
                     fontWeight: FontWeight.bold,
                     fontSize: 40.0),
               ),
+
               Container(
-                margin: EdgeInsets.only(top: 30.0, bottom: 30.0),
-                width: 299,
-                height: 299,
-                color: Colors.grey,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.grey,
+                ),
+                margin: EdgeInsets.only(top: 50.0, bottom: 50.0),
+                width: 295,
+                height: 295,
                 child: Center(
-                    child: Icon(Icons.person, size: 200.0, color: Colors.white)),
+                    child:
+                        Icon(Icons.person, size: 200.0, color: Colors.white)),
               ),
               show
                   ? Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  FloatingActionButton(
-                    heroTag: 'btn2',
-                    onPressed: () {
-                      Vibration.cancel();
-                      FlutterRingtonePlayer.stop();
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        FloatingActionButton(
+                          heroTag: 'btn2',
+                          onPressed: () {
+                            Vibration.cancel();
+                            FlutterRingtonePlayer.stop();
 
-                      PayUsMoney.showUnlockDialog(
-                          context, 'Call', 20, '-audio', onUnlock: () {
-                        setState(() {
-                          show = false;
-                        });
+                            PayUsMoney.showUnlockDialog(
+                                context, 'Call', 20, '-audio', onUnlock: () {
+                              setState(() {
+                                show = false;
+                              });
 
-                        player.play(widget.data['content'], isLocal: false);
-                      });
-                    },
-                    child: Icon(Icons.call, color: Colors.white,),
-                    backgroundColor: Colors.green,
-                  ),
-                  FloatingActionButton(
-                    heroTag: "btn1",
-                    onPressed: () {
-                      Vibration.cancel();
-                      FlutterRingtonePlayer.stop();
-                      Navigator.of(context).pop();
-                    },
-                    child: Icon(Icons.call_end, color: Colors.white,),
-                    backgroundColor: Colors.red,
-                  )
-                ],
-              )
+                              player.play(widget.data['content'],
+                                  isLocal: false);
+                            });
+                          },
+                          child: Icon(
+                            Icons.call,
+                            color: Colors.white,
+                          ),
+                          backgroundColor: Colors.green,
+                        ),
+                        FloatingActionButton(
+                          heroTag: "btn1",
+                          onPressed: () {
+                            Vibration.cancel();
+                            FlutterRingtonePlayer.stop();
+                            Navigator.of(context).pop();
+                          },
+                          child: Icon(
+                            Icons.call_end,
+                            color: Colors.white,
+                          ),
+                          backgroundColor: Colors.red,
+                        )
+                      ],
+                    )
                   : Container()
             ],
           )),
@@ -114,7 +140,6 @@ class _CallState extends State<Call> {
     player = AudioPlayer();
 
     player.onPlayerStateChanged.listen((value) {
-
       if (value == AudioPlayerState.COMPLETED) {
         Navigator.of(context).pop();
       }

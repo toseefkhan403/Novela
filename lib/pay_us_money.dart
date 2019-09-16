@@ -1,14 +1,15 @@
 import 'package:arctic_pups/utils/colors.dart';
+import 'package:arctic_pups/utils/paytm.dart';
+import 'package:arctic_pups/utils/play_store.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:arctic_pups/main.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:paytm_payments/paytm_payments.dart';
 
 class PayUsMoney {
-  static showPaymentOptions(BuildContext context) {
+  static showPaymentOptions(BuildContext context, bool comingFromMainPage) {
     showDialog(
         context: context,
         builder: (context) {
@@ -28,7 +29,6 @@ class PayUsMoney {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-
                         InkWell(
                           onTap: () => Navigator.of(context).pop(),
                           child: Padding(
@@ -38,16 +38,13 @@ class PayUsMoney {
                           ),
                         ),
                         Container(
-                          padding:
-                              EdgeInsets.only(bottom: 18.0, left: 20.0),
+                          padding: EdgeInsets.only(bottom: 18.0, left: 20.0),
                           margin: EdgeInsets.only(top: 18.0),
                           child: Text(
-                            'Ah! You are short of balance',
-                            textAlign: TextAlign.left,
+                            comingFromMainPage ? 'Buy more points' : 'Ah! You are short of balance',
+                            textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 19.0,
-                              fontWeight: FontWeight.bold
-                            ),
+                                fontSize: 19.0, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],
@@ -80,7 +77,7 @@ class PayUsMoney {
                     Container(
                       padding: EdgeInsets.only(bottom: 18.0, left: 30.0),
                       child: Text(
-                        'Snoop through other\'s conversations, intimate photos & videos!',
+                        'Snoop through other\'s conversations, intimate photos & videos! 😉',
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           fontSize: 20.0,
@@ -104,7 +101,7 @@ class PayUsMoney {
                     Container(
                       padding: EdgeInsets.only(bottom: 18.0, left: 30.0),
                       child: Text(
-                        'Pay once and enjoy on as many devices as you like!',
+                        'Pay once and enjoy on as many devices as you like! 🙌🙌',
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           fontSize: 20.0,
@@ -113,11 +110,10 @@ class PayUsMoney {
                       ),
                     ),
 
-
                     Container(
                       padding: EdgeInsets.only(bottom: 18.0, left: 30.0),
                       child: Text(
-                        'Escape reality with our best thrillers and scary stories.',
+                        'Escape reality with our best thrillers and scary stories. 🤯',
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           fontSize: 20.0,
@@ -131,7 +127,8 @@ class PayUsMoney {
                       margin: EdgeInsets.only(top: 32.0),
                       child: Center(
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () =>
+                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (c)=> PlayStore())),
                           child: Container(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 36.0, vertical: 16.0),
@@ -144,8 +141,7 @@ class PayUsMoney {
                                       spreadRadius: 0,
                                       offset: Offset(0.0, 32.0)),
                                 ],
-                                borderRadius:
-                                    new BorderRadius.circular(36.0),
+                                borderRadius: new BorderRadius.circular(36.0),
                                 border: Border.all(
                                     color: Colors.black87, width: 1.0)),
                             child: Text(
@@ -165,7 +161,7 @@ class PayUsMoney {
                       margin: EdgeInsets.only(top: 32.0),
                       child: Center(
                         child: InkWell(
-                          onTap: initPayment,
+                          onTap: () => initPayment(context),
                           child: Container(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 36.0, vertical: 16.0),
@@ -178,8 +174,7 @@ class PayUsMoney {
                                       spreadRadius: 0,
                                       offset: Offset(0.0, 32.0)),
                                 ],
-                                borderRadius:
-                                    new BorderRadius.circular(36.0),
+                                borderRadius: new BorderRadius.circular(36.0),
                                 border: Border.all(
                                     color: Colors.black87, width: 1.0)),
                             child: Text(
@@ -212,8 +207,7 @@ class PayUsMoney {
                                       spreadRadius: 0,
                                       offset: Offset(0.0, 32.0)),
                                 ],
-                                borderRadius:
-                                    new BorderRadius.circular(36.0),
+                                borderRadius: new BorderRadius.circular(36.0),
                                 border: Border.all(
                                     color: Colors.black87, width: 1.0)),
                             child: Text(
@@ -236,9 +230,8 @@ class PayUsMoney {
   }
 
   static void _showAd(BuildContext context) async {
-
     showDialog(
-      barrierDismissible: false,
+        barrierDismissible: false,
         context: context,
         builder: (context) {
           return Center(
@@ -268,21 +261,22 @@ class PayUsMoney {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-
                         Center(
-                          child: SpinKitRipple(color: Colors.black,),
+                          child: SpinKitRipple(
+                            color: Colors.black,
+                          ),
                         ),
-
                         Padding(
                           padding: const EdgeInsets.all(18.0),
                           child: Text(
                             'Please wait...',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.bold),
+                                fontSize: 20.0,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
-
                       ],
                     ),
                   ),
@@ -320,12 +314,16 @@ class PayUsMoney {
         RewardedVideoAd.instance.show();
       }
 
-      if (event == RewardedVideoAdEvent.failedToLoad) {
+      if (event == RewardedVideoAdEvent.failedToLoad ||
+          event == RewardedVideoAdEvent.leftApplication) {
         showTopToast('The ad failed to load');
         Navigator.maybePop(context);
       }
-      if (event == RewardedVideoAdEvent.rewarded) {
 
+      if (event == RewardedVideoAdEvent.closed)
+        Navigator.maybePop(context);
+
+      if (event == RewardedVideoAdEvent.rewarded) {
         currentPoints += 40;
         FirebaseDatabase.instance
             .reference()
@@ -336,12 +334,14 @@ class PayUsMoney {
         Navigator.maybePop(context);
         Navigator.maybePop(context);
         showTopToast('+40 points added to your account');
+        showTopToast('+40 points added to your account');
       }
     };
   }
 
-  static showUnlockDialog(BuildContext context, String what, int howMuch, String extra, {void onUnlock()}) async {
-
+  static showUnlockDialog(
+      BuildContext context, String what, int howMuch, String extra,
+      {void onUnlock()}) async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     showDialog(
         context: context,
@@ -373,24 +373,24 @@ class PayUsMoney {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-
                         Padding(
                           padding: const EdgeInsets.all(18.0),
                           child: Text(
                             'Unlock $what$extra for $howMuch points only!',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.bold),
+                                fontSize: 20.0,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
-
                         Container(
                           margin: EdgeInsets.only(top: 32.0),
                           child: Center(
                             child: InkWell(
                               onTap: () async {
-                                DataSnapshot snaps =
-                                    await FirebaseDatabase.instance
+                                DataSnapshot snaps = await FirebaseDatabase
+                                    .instance
                                     .reference()
                                     .child('users')
                                     .child(user.uid)
@@ -413,19 +413,16 @@ class PayUsMoney {
                                       .child(what)
                                       .set({'1': 1});
 
-                                  showTopToast('$what unlocked successfully! Continue enjoying the Novelle App!');
+                                  showTopToast('$what unlocked successfully!');
                                   Navigator.pop(context);
                                   onUnlock();
-
                                 } else {
                                   //you dont have enough points \ buy more points option
                                   showTopToast(
                                       'You don\'t have enough points!');
 
-                                  PayUsMoney.showPaymentOptions(
-                                      context);
+                                  PayUsMoney.showPaymentOptions(context, false);
                                 }
-
                               },
                               child: Container(
                                 padding: EdgeInsets.symmetric(
@@ -440,7 +437,7 @@ class PayUsMoney {
                                           offset: Offset(0.0, 32.0)),
                                     ],
                                     borderRadius:
-                                    new BorderRadius.circular(36.0),
+                                        new BorderRadius.circular(36.0),
                                     border: Border.all(
                                         color: Colors.black87, width: 1.0)),
                                 child: Text(
@@ -454,9 +451,8 @@ class PayUsMoney {
                             ),
                           ),
                         ),
-
                         Container(
-                          margin: EdgeInsets.only(top: 32.0,bottom: 32.0),
+                          margin: EdgeInsets.only(top: 32.0, bottom: 32.0),
                           child: Center(
                             child: InkWell(
                               onTap: () {
@@ -475,7 +471,7 @@ class PayUsMoney {
                                           offset: Offset(0.0, 32.0)),
                                     ],
                                     borderRadius:
-                                    new BorderRadius.circular(36.0),
+                                        new BorderRadius.circular(36.0),
                                     border: Border.all(
                                         color: Colors.black87, width: 1.0)),
                                 child: Text(
@@ -489,7 +485,6 @@ class PayUsMoney {
                             ),
                           ),
                         ),
-
                       ],
                     ),
                   ),
@@ -498,34 +493,13 @@ class PayUsMoney {
             ),
           );
         });
-
   }
 
-  static void initPayment() async {
-
-    // try/catch any Exceptions.
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-
-    try {
-
-      await PaytmPayments.makePaytmPayment(
-        "PIMOIn97892499954424", // [YOUR_MERCHANT_ID] (required field)
-        "http://www.novelle.dx.am/generateChecksum.php", // [YOUR_CHECKSUM_URL] (required field)
-        customerId: user.uid, // [UNIQUE_ID_FOR_YOUR_CUSTOMER] (auto generated if not specified)
-        orderId: DateTime.now().millisecondsSinceEpoch.toString(), // [UNIQUE_ID_FOR_YOUR_ORDER] (auto generated if not specified)
-        txnAmount: "1.0", // default: 10.0
-        channelId: "WAP", // default: WAP (STAGING value)
-        industryTypeId: "Retail", // default: Retail (STAGING value)
-        website: "DEFAULT", // default: APPSTAGING (STAGING value)
-        staging: false, // default: true (by default paytm staging environment is used)
-        showToast: true, // default: true (by default shows callback messages from paytm in Android Toasts)
-      );
-
-    } catch (e) {
-      print("Some error occurred $e");
-      showTopToast('Some error occurred \n Please try again later');
-    }
-
+  static void initPayment(BuildContext context) async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Paytm();
+        });
   }
-
 }

@@ -1,25 +1,21 @@
 import 'package:arctic_pups/pages/share_page.dart';
+import 'package:arctic_pups/utils/colors.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:arctic_pups/pages/login_page.dart';
 import 'package:arctic_pups/pages/home_page.dart';
 import 'package:arctic_pups/services.dart';
+import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-//todo fix dialog
-//todo add premium purchase
 //todo design buy premium screen
-//todo design main screen
-//todo automatic call
-//todo add backdrop options
-//todo manage coins dialog
-//todo add hindi and english tabs
 //todo add stories
 void main() {
+
   runApp(
     OKToast(
       child: App(),
@@ -37,6 +33,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
           brightness: Brightness.dark,
           primaryColor: Colors.black,
+          accentColor: kShrinePink400,
           backgroundColor: Colors.black,
           fontFamily: 'Raleway'),
       debugShowCheckedModeBanner: false,
@@ -103,7 +100,7 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
-  int currentIndex = 0;
+  final int currentIndex = 0;
 
   @override
   void initState() {
@@ -115,7 +112,7 @@ class HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
             resizeToAvoidBottomPadding: false,
-            bottomNavigationBar: BottomNavigationBar(
+           /* bottomNavigationBar: BottomNavigationBar(
                 selectedItemColor: Colors.white,
                 unselectedItemColor: Colors.grey,
                 type: BottomNavigationBarType.fixed,
@@ -138,7 +135,7 @@ class HomeScreenState extends State<HomeScreen>
                       icon: Icon(Icons.add_circle), title: Text('Add new Story')),
                   BottomNavigationBarItem(
                       icon: Icon(Icons.person), title: Text('Profile')),
-                ]),
+                ]),*/
             body: _getPage(currentIndex),
           );
   }
@@ -179,7 +176,6 @@ List<Color> aquaGradients = [
 showTopToast(String text) {
   Widget widget = Container(
     decoration: BoxDecoration(
-//      color: Colors.grey,
       gradient: LinearGradient(
           begin: FractionalOffset.centerLeft,
           stops: [0.2, 1],
