@@ -1,6 +1,7 @@
 import 'package:arctic_pups/main.dart';
 import 'package:arctic_pups/pages/call_page.dart';
 import 'package:arctic_pups/pages/image_widget_page.dart';
+import 'package:arctic_pups/services.dart';
 import 'package:arctic_pups/utils/colors.dart';
 import 'package:arctic_pups/utils/custom_app_bar.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
@@ -204,10 +205,23 @@ class _ViewChatsState extends State<ViewChats> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    'You received a call from ${data['sent_by']}',
-                    style: TextStyle(
-                        color: Colors.blueGrey, fontWeight: FontWeight.bold),
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        'You received a call from ${data['sent_by']}',
+                        style: TextStyle(
+                            color: Colors.blueGrey, fontWeight: FontWeight.bold),
+                      ),
+
+                      IconButton(
+                        padding: EdgeInsets.only(left: 8.0),
+                        icon: Icon(Icons.call, color: Colors.blueGrey,),
+                        onPressed: (){
+                          Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => Call(data)));
+                        },
+                      )
+                    ],
                   ),
                 ],
               )),

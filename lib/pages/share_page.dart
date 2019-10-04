@@ -1,5 +1,9 @@
 import 'dart:io';
+import 'package:arctic_pups/main.dart';
 import 'package:arctic_pups/ChatMessages.dart';
+import 'package:arctic_pups/pages/call_page.dart';
+import 'package:arctic_pups/pages/image_widget_page.dart';
+import 'package:arctic_pups/utils/colors.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +11,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 List<dynamic> storyList, chatList;
-
 
 class SharePage extends StatefulWidget {
   final String challengeKey, fromUid;
@@ -37,10 +40,15 @@ class _SharePageState extends State<SharePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(tooltip: 'add a new story', child: Icon(Icons.add_comment), onPressed: (){
-        addTheMessagesToTheDb();
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewStory()));
-      },),
+      floatingActionButton: FloatingActionButton(
+        tooltip: 'add a new story',
+        child: Icon(Icons.add_comment),
+        onPressed: () {
+//        addTheMessagesToTheDb();
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => NewStory()));
+        },
+      ),
       resizeToAvoidBottomPadding: false,
       body: StreamBuilder(
           stream:
@@ -113,7 +121,7 @@ class _EditChatsState extends State<EditChats>
           children: <Widget>[
             ListTile(
               title: Text('increase the episode by 1'),
-              onTap: (){
+              onTap: () {
                 setState(() {
                   episode++;
                 });
@@ -121,7 +129,7 @@ class _EditChatsState extends State<EditChats>
             ),
             ListTile(
               title: Text('decrease the episode by 1'),
-              onTap: (){
+              onTap: () {
                 setState(() {
                   episode--;
                 });
@@ -167,29 +175,216 @@ class _EditChatsState extends State<EditChats>
 
   _makeMessages(BuildContext context, data) {
     print('the data $data');
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(data['sent_by']),
+    return InkWell(
+      onTap: () {
+        //edit
+        TextEditingController msgEditController = TextEditingController();
+        TextEditingController sentEditController = TextEditingController();
+        TextEditingController typeEditController = TextEditingController();
 
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.all(Radius.circular(20.0)),
+        msgEditController.text = data['content'];
+        sentEditController.text = data['sent_by'];
+        typeEditController.text = data['type'];
+
+        showDialog(
+          context: context,
+          builder: (context) => Material(
+            color: Colors.blueGrey,
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30.0),
+                topRight: Radius.circular(30.0),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SelectableText(data['content']),
-              ),
-            )
-          ],
-        ),
-      ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: Text(
+                    'Edit the message',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(fontSize: 20.0, fontFamily: 'Pacifico'),
+                  ),
+                ),
+                TextField(
+                  controller: msgEditController,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      FirebaseDatabase.instance
+                          .reference()
+                          .child('episodes')
+                          .child(widget.title)
+                          .child('episode$episode')
+                          .child(data['timestamp'].toString())
+                          .set({
+                        'content': msgEditController.value.text,
+                        'sent_by': sentEditController.value.text,
+                        'type': typeEditController.value.text,
+                        'timestamp': data['timestamp']
+                      });
+
+                      Navigator.pop(context);
+                    },
+                    child: Icon(Icons.skip_next),
+                  ),
+                ),
+                TextField(
+                  controller: sentEditController,
+                ),
+                TextField(
+                  controller: typeEditController,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      onDoubleTap: () {
+        //delete
+        FirebaseDatabase.instance
+            .reference()
+            .child('episodes')
+            .child(widget.title)
+            .child('episode$episode')
+            .child(data['timestamp'].toString())
+            .remove();
+
+        showTopToast('This msg is removed');
+      },
+      child: _whatWidget(context, data),
     );
+  }
+
+  Widget _whatWidget(BuildContext context, data) {
+    bool isRight = data['sent_by'].toString().contains('1');
+
+    switch (data['type']) {
+      case 'text':
+        return Container(
+          margin: isRight
+              ? EdgeInsets.only(left: 50.0)
+              : EdgeInsets.only(right: 50.0),
+          child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment:
+                    isRight ? MainAxisAlignment.end : MainAxisAlignment.start,
+                crossAxisAlignment:
+                    isRight ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(isRight
+                        ? data['sent_by']
+                            .toString()
+                            .replaceAll('1', " ")
+                            .toString()
+                        : data['sent_by']),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Text(
+                        data['content'],
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  )
+                ],
+              )),
+        );
+
+      case 'msg':
+        return Container(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  data['content'],
+                  style: TextStyle(
+                      color: Colors.blueGrey, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+        );
+
+      case 'call':
+        return Container(
+          child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        'You received a call from ${data['sent_by']}',
+                        style: TextStyle(
+                            color: Colors.blueGrey,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      IconButton(
+                        padding: EdgeInsets.only(left: 8.0),
+                        icon: Icon(
+                          Icons.call,
+                          color: Colors.blueGrey,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => Call(data)));
+                        },
+                      )
+                    ],
+                  ),
+                ],
+              )),
+        );
+
+      case 'image':
+        return ImageStatefulWidget(isRight, data);
+
+      default:
+        return Container(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment:
+                  isRight ? MainAxisAlignment.end : MainAxisAlignment.start,
+              crossAxisAlignment:
+                  isRight ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(isRight
+                    ? data['sent_by'].toString().replaceAll('1', " ").toString()
+                    : data['sent_by']),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Text(data['content']),
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+    }
   }
 
   void _addToDb() async {
@@ -217,16 +412,11 @@ class _EditChatsState extends State<EditChats>
     }
   }
 
-
   void _addImageToDb() async {
-
     File galleryImage = await FilePicker.getFile(type: FileType.ANY);
 
     if (galleryImage != null) {
-
-      int timestamp = DateTime
-          .now()
-          .millisecondsSinceEpoch;
+      int timestamp = DateTime.now().millisecondsSinceEpoch;
       String sent_by = sentController.value.text;
       String type = typeController.value.text;
 
@@ -237,7 +427,7 @@ class _EditChatsState extends State<EditChats>
 
       StorageUploadTask uploadTask = ref.putFile(galleryImage);
       String imageURL =
-      await (await uploadTask.onComplete).ref.getDownloadURL();
+          await (await uploadTask.onComplete).ref.getDownloadURL();
 
       //content is image url
       if (imageURL != null) {
@@ -260,61 +450,57 @@ class _EditChatsState extends State<EditChats>
         Navigator.pop(context);
       }
     }
-
   }
 
   void openWriteArea() {
-    showModalBottomSheet(
+    showDialog(
       context: context,
       builder: (context) => Material(
-            color: Colors.blueGrey,
-            clipBehavior: Clip.antiAliasWithSaveLayer,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30.0),
-                topRight: Radius.circular(30.0),
+        color: Colors.blueGrey,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30.0),
+            topRight: Radius.circular(30.0),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: Text(
+                'Write the message',
+                textAlign: TextAlign.left,
+                style: TextStyle(fontSize: 20.0, fontFamily: 'Pacifico'),
               ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Text(
-                    'Write the message',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 20.0, fontFamily: 'Pacifico'),
-                  ),
-                ),
-                TextField(
-                  controller: msgController,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: FloatingActionButton(
-                    onPressed: _addToDb,
-                    child: Icon(Icons.skip_next),
-                  ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: FloatingActionButton(
-                    onPressed: _addImageToDb,
-                    child: Icon(Icons.image),
-                  ),
-                ),
-
-
-                TextField(
-                  controller: sentController,
-                ),
-                TextField(
-                  controller: typeController,
-                ),
-              ],
+            TextField(
+              controller: msgController,
             ),
-          ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: FloatingActionButton(
+                onPressed: _addToDb,
+                child: Icon(Icons.skip_next),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: FloatingActionButton(
+                onPressed: _addImageToDb,
+                child: Icon(Icons.image),
+              ),
+            ),
+            TextField(
+              controller: sentController,
+            ),
+            TextField(
+              controller: typeController,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -325,10 +511,130 @@ class NewStory extends StatefulWidget {
 }
 
 class _NewStoryState extends State<NewStory> {
+  TextEditingController description = TextEditingController();
+  TextEditingController genre = TextEditingController();
+  TextEditingController medium = TextEditingController();
+  TextEditingController title = TextEditingController();
+  TextEditingController totalEpisodes = TextEditingController();
+  TextEditingController views = TextEditingController();
+  TextEditingController imageUrlCntrllr = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
+    return Scaffold(
+      body: Container(
+        color: kShrineBrown600,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Text(
+                  'Write a new story',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(fontSize: 20.0, fontFamily: 'Pacifico'),
+                ),
+              ),
+              _titleTextField('title :', title),
+              _titleTextField('description :', description),
+              _titleTextField('genre :', genre),
+              _titleTextField('medium :', medium),
+              _titleTextField('totalEpisodes :', totalEpisodes),
+              _titleTextField('views :', views),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text('image :'),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: imageUrlCntrllr,
+                          ),
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.photo, color: Colors.black,),
+                      onPressed: () async {
+                        File galleryImage =
+                        await FilePicker.getFile(type: FileType.ANY);
+                        if (galleryImage != null) {
+                          int timestamp = DateTime.now().millisecondsSinceEpoch;
+
+                          StorageReference ref = FirebaseStorage.instance
+                              .ref()
+                              .child('novella_photos')
+                              .child('$timestamp');
+
+                          StorageUploadTask uploadTask =
+                          ref.putFile(galleryImage);
+                          String imageURL = await (await uploadTask.onComplete)
+                              .ref
+                              .getDownloadURL();
+
+                          if (imageURL != null) {
+                            imageUrlCntrllr.text = imageURL;
+                          }
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    if (imageUrlCntrllr.value.text != "") {
+                      FirebaseDatabase.instance
+                          .reference()
+                          .child('stories')
+                          .child(title.value.text)
+                          .set({
+                        'description': description.value.text,
+                        'genre': genre.value.text,
+                        'image': imageUrlCntrllr.value.text,
+                        'medium': medium.value.text.toUpperCase(),
+                        'title': title.value.text,
+                        'totalEpisodes': int.parse(totalEpisodes.value.text),
+                        'views': int.parse(views.value.text),
+                      });
+
+                      Navigator.pop(context);
+                      showTopToast('Story added successfully!');
+                    }
+                  },
+                  child: Icon(Icons.skip_next),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
+
+  Widget _titleTextField(
+          String title, TextEditingController textEditingController) =>
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(title),
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: TextField(
+                controller: textEditingController,
+              ),
+            )
+          ],
+        ),
+      );
 }

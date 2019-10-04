@@ -1,18 +1,13 @@
-import 'package:arctic_pups/pages/share_page.dart';
 import 'package:arctic_pups/utils/colors.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:arctic_pups/pages/login_page.dart';
 import 'package:arctic_pups/pages/home_page.dart';
 import 'package:arctic_pups/services.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-//todo design buy premium screen
 //todo add stories
 void main() {
 
@@ -49,7 +44,7 @@ class RootPage extends StatefulWidget {
 
 class _RootPageState extends State<RootPage> {
   //this should be a logo screen
-  Widget parent = Center(child: SpinKitChasingDots(color: Colors.white));
+  Widget parent = Center(child: SpinKitRipple(color: Colors.white));
 
   @override
   void initState() {
@@ -73,7 +68,7 @@ class _RootPageState extends State<RootPage> {
       if (user.isEmailVerified || list[0].providerId == 'facebook.com') {
         setState(() {
           print('setting homescreen');
-          parent = HomeScreen();
+          parent = HomePage();
         });
       } else {
         setState(() {
@@ -85,85 +80,6 @@ class _RootPageState extends State<RootPage> {
       setState(() {
         parent = LoginPage();
       });
-    }
-  }
-}
-
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key key}) : super(key: key);
-
-  @override
-  HomeScreenState createState() {
-    return new HomeScreenState();
-  }
-}
-
-class HomeScreenState extends State<HomeScreen>
-    with SingleTickerProviderStateMixin {
-  final int currentIndex = 0;
-
-  @override
-  void initState() {
-    _isFirstTimeLogin();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-            resizeToAvoidBottomPadding: false,
-           /* bottomNavigationBar: BottomNavigationBar(
-                selectedItemColor: Colors.white,
-                unselectedItemColor: Colors.grey,
-                type: BottomNavigationBarType.fixed,
-                backgroundColor: Colors.black,
-                showUnselectedLabels: true,
-                selectedFontSize: 10.0,
-                unselectedFontSize: 10.0,
-                currentIndex: currentIndex,
-                onTap: (index) {
-                  setState(() {
-                    currentIndex = index;
-                  });
-                },
-                items: [
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.home),
-                      backgroundColor: Colors.black,
-                      title: Text('Home')),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.add_circle), title: Text('Add new Story')),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.person), title: Text('Profile')),
-                ]),*/
-            body: _getPage(currentIndex),
-          );
-  }
-
-  Widget _getPage(int currentIndex) {
-    switch (currentIndex) {
-      case 0:
-        return HomePage();
-
-      case 1:
-        return SharePage();
-
-      case 2:
-        return HomePage();
-
-      default:
-        return HomePage();
-    }
-  }
-
-  _isFirstTimeLogin() async {
-
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    DataSnapshot snapshot = await FirebaseDatabase.instance.reference().child('users').child(user.uid).child('points').once();
-
-    if (snapshot.value == null){
-      //first time user
-      FirebaseDatabase.instance.reference().child('users').child(user.uid).child('points').set(200);
     }
   }
 }

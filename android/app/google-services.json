@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "444983347642-tccl6m1up04jname63c9cs3vsut77qbl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pandog.arctic_pups",
+            "certificate_hash": "b035a53a7db093d9cbe6ee56f3b384050c4595d8"
+          }
+        },
+        {
+          "client_id": "444983347642-9qp2u13aqm03r9tnk441i7p54o838i02.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pandog.arctic_pups",
+            "certificate_hash": "7eba51a3b9f452617e6365ebb61b7e10c8a650e9"
+          }
+        },
+        {
           "client_id": "444983347642-85ibn9uoi99jpurtb89v0032skiu6m3l.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -25,9 +41,6 @@
         }
       ],
       "services": {
-
-        "admob_app_id": "ca-app-pub-4857431878844198~9332060381",
-
         "appinvite_service": {
           "other_platform_oauth_client": [
             {

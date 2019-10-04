@@ -1,7 +1,9 @@
 import 'package:arctic_pups/main.dart';
 import 'package:arctic_pups/pay_us_money.dart';
+import 'package:arctic_pups/services.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:vibration/vibration.dart';
 
@@ -56,12 +58,13 @@ class _CallState extends State<Call> {
             children: <Widget>[
 
               Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  'Incoming call',
+                  '${widget.data['sent_by']}',
                   style: TextStyle(
                       color: Colors.white,
-                      fontSize: 17.0),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 40.0),
                 ),
               ),
 
@@ -69,12 +72,14 @@ class _CallState extends State<Call> {
                 height: 50.0,
               ),
 
-              Text(
-                '${widget.data['sent_by']}',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 40.0),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child:  show? Text(
+                  'Incoming call',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 17.0),
+                ) : Timer(player),
               ),
 
               Container(
@@ -99,15 +104,24 @@ class _CallState extends State<Call> {
                             Vibration.cancel();
                             FlutterRingtonePlayer.stop();
 
-                            PayUsMoney.showUnlockDialog(
-                                context, 'Call', 20, '-audio', onUnlock: () {
+                            if (paidUser){
                               setState(() {
                                 show = false;
                               });
 
                               player.play(widget.data['content'],
                                   isLocal: false);
-                            });
+                            }else {
+                              PayUsMoney.showUnlockDialog(
+                                  context, 'Call', 20, '-audio', onUnlock: () {
+                                setState(() {
+                                  show = false;
+                                });
+
+                                player.play(widget.data['content'],
+                                    isLocal: false);
+                              });
+                            }
                           },
                           child: Icon(
                             Icons.call,
@@ -149,3 +163,71 @@ class _CallState extends State<Call> {
     });
   }
 }
+
+class Timer extends StatefulWidget {
+  final AudioPlayer player;
+  Timer(this.player);
+
+  @override
+  _TimerState createState() => _TimerState();
+}
+
+class _TimerState extends State<Timer> {
+
+  int minute, seconds;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: StreamBuilder<Duration>(
+        stream: widget.player.onAudioPositionChanged,
+        builder: (context, snapshot) {
+
+          if (snapshot.hasData) {
+
+            seconds = snapshot.data.inSeconds;
+            minute = snapshot.data.inMinutes;
+
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                //minute timer
+                Text(
+                  '0$minute',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 17.0),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(3.6),
+                  child: Text(
+                    ':',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 17.0),
+                  ),
+                ),
+                Text(
+                  seconds < 10 ? '0$seconds' : '$seconds',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17.0),
+                )
+
+              ],
+            );
+          }else {
+            return Container();
+          }
+        }
+      ),
+    );
+  }
+}
+
+

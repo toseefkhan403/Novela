@@ -2,60 +2,84 @@ import 'package:arctic_pups/main.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class ChatMessages {
-
-
-  final String content,sent_by,type;
+  final String content, sent_by, type;
   int timestamp;
 
   //put 1 with the name of the person in 'sent_by' parameter to make it appear on the right
   //types are : 'text' , 'msg' , 'image' , 'call'
   // 'msg' will be general message provided to the user for the context (the stuff that doesn't appear as chat messages)
 
-  ChatMessages({this.content,this.sent_by,this.type,this.timestamp});
-
+  ChatMessages({this.content, this.sent_by, this.type, this.timestamp});
 }
 
 addTheMessagesToTheDb() {
+  List<ChatMessages> episodeList = List();
 
-  List<ChatMessages> episode3List = List();
+  //YOU HAVE TO EDIT THIS PART ONLY EVERYTHING ELSE IS AUTOMAGIC
 
-  episode3List.add(ChatMessages(content: "Vishaka's chat with her bestfriend Neha", sent_by: 'Raj1', type: 'msg' ));
+  episodeList.add(ChatMessages(
+      content: "Abey kaha reh gya? Teri bandi ne pakad lia kya? hahahaha",
+      sent_by: 'Sagar1',
+      type: 'text'));
 
-  episode3List.add(ChatMessages(content: 'hi babe, aayi kyu nahi aaj? ', sent_by: 'Neha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Mat pooch yar dimag kharab hua hua hai mera', sent_by: 'Vishakha1', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Raj ke saath ladaayi hui?', sent_by: 'Neha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Nahi yar', sent_by: 'Vishakha1', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Toh phir?', sent_by: 'Neha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Tujhe mene btaya thya na that he has shifted to a new flat', sent_by: 'Vishakha1', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Haa?', sent_by: 'Neha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Vaha koi ladki hai, bin baat ke chep ho rahi hai isse.', sent_by: 'Vishakha1', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Subah se toh do baar aa bhi chuki uske ghar mai', sent_by: 'Vishakha1', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Bahot gussa aa raha hai mujhe muh todd dungi jaake iska kamini saali', sent_by: 'Vishakha1', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Vishakha shaant hoja yr', sent_by: 'Neha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Dekh direct action lene ka koi faeda nahi hai.', sent_by: 'Neha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Toh phir? Bata kya karu', sent_by: 'Vishakha1', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Uske ghar ke paas, jaha wo rehti hai waha jaa and dekh', sent_by: 'Neha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Pehle pata karle ki hai kon, kya karti hai kaha rehti hai exact', sent_by: 'Neha', type: 'text' ));
-  episode3List.add(ChatMessages(content: "uske baad we'll see how to treat that bitch", sent_by: 'Neha', type: 'text' ));
-  episode3List.add(ChatMessages(content: "Alright. Mai jaati hu waha kal and then I'll let u knw", sent_by: 'Vishakha1', type: 'text' ));
-  episode3List.add(ChatMessages(content: "yep.. abhi soja DW gn", sent_by: 'Neha', type: 'text' ));
+  episodeList.add(ChatMessages(
+      content: "Nhi bey. Moj ka intezam krra hu",
+      sent_by: 'Arpit',
+      type: 'text'));
 
-  episode3List.add(ChatMessages(content: 'Next Day', sent_by: 'Raj1', type: 'msg' ));
-  episode3List.add(ChatMessages(content: 'Kaha pe hai tu', sent_by: 'Neha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Just reached here. Raj ke ghar ke backside pe jaari hu', sent_by: 'Neha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'okay be careful', sent_by: 'Neha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'kya hua? bol kch', sent_by: 'Neha', type: 'text' ));
-  episode3List.add(ChatMessages(content: "Vishakhaaa?", sent_by: 'Neha', type: 'text' ));
-  episode3List.add(ChatMessages(content: "Yaha pe koi ghar nahi hai :| ", sent_by: 'Vishakha1', type: 'text' ));
-  episode3List.add(ChatMessages(content: "matlab???", sent_by: 'Neha', type: 'text' ));
-  episode3List.add(ChatMessages(content: "https://www.thehindu.com/society/history-and-culture/249kc7/article26495936.ece/ALTERNATES/FREE_960/11NDMPMETROCAPITALCHECKTEMPLEMOSQUEBSZM", sent_by: 'Vishakha1', type: 'image'));
-  episode3List.add(ChatMessages(content: 'whatttt???', sent_by: 'Neha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'yes.. Jesa Raj ne btaya tha waha to koi ghar hai hi nhi', sent_by: 'Vishakha1', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Ye hai wo jagah. Yha rehti hogi kya? :|', sent_by: 'Vishakha1', type: 'text' ));
-  episode3List.add(ChatMessages(content: "I'm speechless", sent_by: "Vishakha1", type: 'text' ));
-  episode3List.add(ChatMessages(content: 'So am I', sent_by: 'Neha', type: 'text' ));
-  episode3List.add(ChatMessages(content: 'Raj k flat k side m ek ghar h, waha jaake poochti hu', sent_by: 'Vishakha1', type: 'text' ));
-  episode3List.add(ChatMessages(content: "haa.. yeh sahi rahega", sent_by: 'Neha', type: 'text' ));
+  episodeList
+      .add(ChatMessages(content: "Kya?", sent_by: 'Sagar1', type: 'text'));
+
+  episodeList.add(ChatMessages(
+      content: "https://productplacementblog.com/wp-content/uploads/2017/12/Shock-Top-Honeycrisp-Apple-Wheat-Michelob-and-Budweiser-Beer-Bottles-in-Home-Again-2.jpg", sent_by: 'Arpit', type: 'image'));
+
+  episodeList.add(ChatMessages(
+      content: "Arey shabash londe!", sent_by: 'Sagar1', type: 'text'));
+
+  episodeList.add(
+      ChatMessages(content: "*satan emoji", sent_by: 'Arpit', type: 'text'));
+
+  episodeList.add(ChatMessages(
+      content: "Chat with Arushi", sent_by: 'Sagar1', type: 'msg'));
+
+  episodeList.add(ChatMessages(
+      content: "Ap nikal gye trip k liye?", sent_by: 'Arushi1', type: 'text'));
+
+  episodeList
+      .add(ChatMessages(content: "Yes", sent_by: 'Arpit', type: 'text'));
+
+  episodeList.add(ChatMessages(
+      content:
+          "Apna dhyan rakhna. Sagar ke sath zyada mat ghoomna. Mjhe pasand nhi h wo",
+      sent_by: 'Arushi1',
+      type: 'text'));
+
+  episodeList.add(ChatMessages(
+      content: "YAR TUM FIR SHURU HO GYI?", sent_by: 'Arpit', type: 'text'));
+
+  episodeList.add(ChatMessages(
+      content: "mai bss bol rhi hu. Please take care of yourself",
+      sent_by: 'Arushi1',
+      type: 'text'));
+
+  episodeList.add(ChatMessages(
+      content: "Tum na bhaad m jao. Bye", sent_by: 'Arpit', type: 'text'));
+
+  episodeList.add(ChatMessages(
+      content: "Ok. Tumhe apna gussa mere p nikaalna h toh nikaal lo",
+      sent_by: 'Arushi1',
+      type: 'text'));
+
+  episodeList.add(ChatMessages(
+      content: "But usse door rehna", sent_by: 'Arushi1', type: 'text'));
+
+  episodeList.add(ChatMessages(
+      content: "Warna fir kabhi mere paas mat aana",
+      sent_by: 'Arushi1',
+      type: 'text'));
+
+  episodeList.add(ChatMessages(
+      content: "Bye. I am getting late.", sent_by: 'Arpit', type: 'text'));
 
   /*episode3List.add(ChatMessages(content: 'EPISODE 3', sent_by: 'Raj1', type: 'msg' ));
 /*episode3List.add(ChatMessages(content: 'EPISODE 3', sent_by: 'Raj1', type: 'msg' ));
@@ -101,24 +125,21 @@ addTheMessagesToTheDb() {
 
   episode3List.add(ChatMessages(content: 'THE END', sent_by: 'Raj1', type: 'msg' ));*/
 
-
-  for (int i = 0; i < episode3List.length ; i++) {
-
-    episode3List[i].timestamp = DateTime.now().millisecondsSinceEpoch;
+  for (int i = 0; i < episodeList.length; i++) {
+    episodeList[i].timestamp = DateTime.now().millisecondsSinceEpoch;
     FirebaseDatabase.instance
         .reference()
         .child('episodes')
-        .child('The unknown girl') //title of the story
+        .child('The Trip') //title of the story
         .child('episode2') //episodeNumber
-        .child(episode3List[i].timestamp.toString())
+        .child(episodeList[i].timestamp.toString())
         .set({
-      'content': episode3List[i].content,
-      'sent_by': episode3List[i].sent_by,
-      'type': episode3List[i].type,
-      'timestamp': episode3List[i].timestamp
+      'content': episodeList[i].content,
+      'sent_by': episodeList[i].sent_by,
+      'type': episodeList[i].type,
+      'timestamp': episodeList[i].timestamp
     });
 
     showTopToast('Data inserted for $i');
   }
-
 }

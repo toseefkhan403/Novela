@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:arctic_pups/pay_us_money.dart';
+import 'package:arctic_pups/services.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
-
 
 class ImageStatefulWidget extends StatefulWidget {
   final bool isRight;
@@ -16,6 +16,18 @@ class ImageStatefulWidget extends StatefulWidget {
 
 class _ImageStatefulWidgetState extends State<ImageStatefulWidget> {
   bool _isUnlocked = false;
+
+
+  @override
+  void initState() {
+
+    if (paidUser){
+      setState(() {
+        _isUnlocked = true;
+      });
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

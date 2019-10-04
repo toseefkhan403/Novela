@@ -1,12 +1,13 @@
+import 'package:arctic_pups/services.dart';
 import 'package:arctic_pups/utils/colors.dart';
 import 'package:arctic_pups/utils/paytm.dart';
-import 'package:arctic_pups/utils/play_store.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:arctic_pups/main.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 
 class PayUsMoney {
   static showPaymentOptions(BuildContext context, bool comingFromMainPage) {
@@ -41,7 +42,9 @@ class PayUsMoney {
                           padding: EdgeInsets.only(bottom: 18.0, left: 20.0),
                           margin: EdgeInsets.only(top: 18.0),
                           child: Text(
-                            comingFromMainPage ? 'Buy more points' : 'Ah! You are short of balance',
+                            comingFromMainPage
+                                ? 'Buy more points'
+                                : 'Ah! You are short of balance',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: 19.0, fontWeight: FontWeight.bold),
@@ -127,8 +130,7 @@ class PayUsMoney {
                       margin: EdgeInsets.only(top: 32.0),
                       child: Center(
                         child: InkWell(
-                          onTap: () =>
-                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (c)=> PlayStore())),
+                          onTap: () => doThePaymentPlease(context),
                           child: Container(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 36.0, vertical: 16.0),
@@ -296,13 +298,14 @@ class PayUsMoney {
     int currentPoints = snapshot.value;
 
     MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
-        keywords: <String>['horror', 'text story app'],
-        contentUrl: 'http://www.novelle.dx.am/',
-        birthday: DateTime.now(),
-        childDirected: false,
-        designedForFamilies: true,
-        gender: MobileAdGender.unknown,
-        testDevices: <String>['D4B707E34B0E9A024C6021CEF86FD426']);
+      keywords: <String>['horror', 'text story app'],
+      contentUrl: 'http://www.novelle.dx.am/',
+      birthday: DateTime.now(),
+      childDirected: false,
+      designedForFamilies: true,
+      gender: MobileAdGender.unknown,
+//        testDevices: <String>['D4B707E34B0E9A024C6021CEF86FD426']
+    );
 
     await RewardedVideoAd.instance.load(
         adUnitId: 'ca-app-pub-4857431878844198/3584909688',
@@ -320,8 +323,7 @@ class PayUsMoney {
         Navigator.maybePop(context);
       }
 
-      if (event == RewardedVideoAdEvent.closed)
-        Navigator.maybePop(context);
+      if (event == RewardedVideoAdEvent.closed) Navigator.maybePop(context);
 
       if (event == RewardedVideoAdEvent.rewarded) {
         currentPoints += 40;
@@ -343,6 +345,7 @@ class PayUsMoney {
       BuildContext context, String what, int howMuch, String extra,
       {void onUnlock()}) async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    int buyTapCount = 0;
     showDialog(
         context: context,
         builder: (context) {
@@ -388,40 +391,40 @@ class PayUsMoney {
                           margin: EdgeInsets.only(top: 32.0),
                           child: Center(
                             child: InkWell(
+                              splashColor: Colors.black38,
                               onTap: () async {
-                                DataSnapshot snaps = await FirebaseDatabase
-                                    .instance
-                                    .reference()
-                                    .child('users')
-                                    .child(user.uid)
-                                    .child('points')
-                                    .once();
-                                int availablePoints = snaps.value;
-
-                                if (availablePoints >= howMuch) {
-                                  //cut the points and proceed
-                                  await FirebaseDatabase.instance
+                                if (buyTapCount == 0) {
+                                  buyTapCount++;
+                                  DataSnapshot snaps = await FirebaseDatabase
+                                      .instance
                                       .reference()
                                       .child('users')
                                       .child(user.uid)
                                       .child('points')
-                                      .set(availablePoints - howMuch);
-                                  await FirebaseDatabase.instance
-                                      .reference()
-                                      .child('user_unlocked_stories')
-                                      .child(user.uid)
-                                      .child(what)
-                                      .set({'1': 1});
+                                      .once();
+                                  int availablePoints = snaps.value;
 
-                                  showTopToast('$what unlocked successfully!');
-                                  Navigator.pop(context);
-                                  onUnlock();
-                                } else {
-                                  //you dont have enough points \ buy more points option
-                                  showTopToast(
-                                      'You don\'t have enough points!');
+                                  if (availablePoints >= howMuch) {
+                                    //cut the points and proceed
+                                    await FirebaseDatabase.instance
+                                        .reference()
+                                        .child('users')
+                                        .child(user.uid)
+                                        .child('points')
+                                        .set(availablePoints - howMuch);
 
-                                  PayUsMoney.showPaymentOptions(context, false);
+                                    showTopToast(
+                                        '$what unlocked successfully!');
+                                    Navigator.pop(context);
+                                    onUnlock();
+                                  } else {
+                                    //you dont have enough points \ buy more points option
+                                    showTopToast(
+                                        'You don\'t have enough points!');
+                                    Navigator.pop(context);
+                                    PayUsMoney.showPaymentOptions(
+                                        context, false);
+                                  }
                                 }
                               },
                               child: Container(
@@ -455,6 +458,7 @@ class PayUsMoney {
                           margin: EdgeInsets.only(top: 32.0, bottom: 32.0),
                           child: Center(
                             child: InkWell(
+                              splashColor: Colors.black38,
                               onTap: () {
                                 Navigator.of(context).pop();
                               },
@@ -501,5 +505,59 @@ class PayUsMoney {
         builder: (context) {
           return Paytm();
         });
+  }
+
+  static void doThePaymentPlease(BuildContext context) async {
+    InAppPurchaseConnection.instance.purchaseUpdatedStream.listen((purchases) {
+      if (purchases.isNotEmpty) {
+        for (PurchaseDetails purchase in purchases) {
+          if (purchase.status == PurchaseStatus.purchased) {
+            if (purchase.productID == "product_sub_01") {
+              deliverThePurchase(purchase);
+              showTopToast("You have subscribed succesfully!");
+              Navigator.maybePop(context);
+            }
+          }
+        }
+      }
+    });
+
+    bool available = await InAppPurchaseConnection.instance.isAvailable();
+    if (available) {
+      const Set<String> _kIds = {'product_sub_01'};
+      final ProductDetailsResponse response =
+          await InAppPurchaseConnection.instance.queryProductDetails(_kIds);
+
+      List<ProductDetails> products = response.productDetails;
+
+      for (ProductDetails p in products) {
+        final PurchaseParam purchaseParam = PurchaseParam(productDetails: p);
+        InAppPurchaseConnection.instance
+            .buyNonConsumable(purchaseParam: purchaseParam);
+      }
+    } else {
+      showTopToast("The store cannot be reached right now. Try again later");
+    }
+  }
+
+  static void deliverThePurchase(PurchaseDetails purchase) async {
+    print('delivering the purchase');
+    paidUser = true;
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    await FirebaseDatabase.instance
+        .reference()
+        .child('users')
+        .child(user.uid)
+        .child('paid')
+        .set(true);
+
+    FirebaseDatabase.instance
+        .reference()
+        .child('purchase_record')
+        .child(user.uid)
+        .set({
+      'purchaseId': purchase.purchaseID,
+      'purchaseDate': purchase.transactionDate,
+    });
   }
 }

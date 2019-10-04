@@ -47,9 +47,9 @@ class Paytm extends StatelessWidget {
                     ),
                   ),
 
-                  _widgets(9, 100),
-                  _widgets(99, 1200),
-                  _widgets(499, 6000),
+                  _widgets(9, 50),
+                  _widgets(299, 1200),
+                  _widgets(499, 2100),
                 ],
               ),
             ),
