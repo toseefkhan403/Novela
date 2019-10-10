@@ -96,7 +96,7 @@ class _GLoginState extends State<GLogin> {
         children: <Widget>[
           Center(
             child: Image.asset(
-              'assets/images/n.jpg',
+              'assets/images/ic_novela.png',
               height: 100.0,
               width: 100.0,
               fit: BoxFit.cover,
@@ -119,7 +119,6 @@ class _GLoginState extends State<GLogin> {
                 gradient: LinearGradient(
                     begin: FractionalOffset(0.0, 0.4),
                     end: FractionalOffset(0.9, 0.7),
-                    // Add one stop for each color. Stops should increase from 0 to 1
                     stops: [
                       0.2,
                       0.9
@@ -320,7 +319,7 @@ class _GLoginState extends State<GLogin> {
                     } else {
                       //Continue to home page
                       Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => RootPage()));
+                          MaterialPageRoute(builder: (context) => RootPage(usingFb: true)));
                     }
                   },
                   child: Container(
@@ -457,7 +456,7 @@ class _SignInState extends State<SignIn> {
                 Container(
                   margin: EdgeInsets.only(top: 48.0),
                   child: Text(
-                    'Sign Up \nfor Novelle.',
+                    'Sign Up \nfor Novela',
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       letterSpacing: 3,

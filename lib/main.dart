@@ -8,9 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-//todo add stories
 void main() {
-
   runApp(
     OKToast(
       child: App(),
@@ -38,6 +36,11 @@ class App extends StatelessWidget {
 }
 
 class RootPage extends StatefulWidget {
+
+  final bool usingFb;
+
+  RootPage({this.usingFb});
+
   @override
   _RootPageState createState() => _RootPageState();
 }
@@ -60,12 +63,9 @@ class _RootPageState extends State<RootPage> {
   void _goToAppropriateScreen() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     if (user != null) {
-      print(user.providerData);
-      List<UserInfo> list = user.providerData;
 
-      //todo catch Index exception
-      //add fb logic here
-      if (user.isEmailVerified || list[0].providerId == 'facebook.com') {
+      //jugaad
+      if (user.isEmailVerified || widget.usingFb == true || user.photoUrl.contains("facebook.com")) {
         setState(() {
           print('setting homescreen');
           parent = HomePage();

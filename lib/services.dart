@@ -10,13 +10,31 @@ import 'package:paytm_payments/paytm_payments.dart';
 
 FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-bool paidUser = false;
+Future<bool> paidUser() async {
+
+  String uid = await _getAccountKey();
+  if (uid != null) {
+    DataSnapshot snapshot = await FirebaseDatabase.instance
+        .reference()
+        .child('users')
+        .child(uid)
+        .child('paid')
+        .once();
+
+    if (snapshot.value == true){
+      return true;
+    }else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
 
 class FirebaseService {
   FirebaseService() {
     initPayments();
     initFirebase();
-    checkPaidUser();
     firebaseCloudMessagingListeners();
   }
 
@@ -104,59 +122,6 @@ class FirebaseService {
     });
   }
 
-  //some boiler-plate code
-  static Future<String> createMountain() async {
-    String accountKey = await _getAccountKey();
-
-    var mountain = <String, dynamic>{
-      'name': '',
-      'created': '12th jan',
-    };
-
-    DatabaseReference reference = FirebaseDatabase.instance
-        .reference()
-        .child("accounts")
-        .child(accountKey)
-        .child("mountains")
-        .push();
-
-    reference.set(mountain);
-
-    return reference.key;
-  }
-
-  static Future<StreamSubscription<Event>> getNameStream(
-      void onData(String name)) async {
-    String accountKey = await _getAccountKey();
-
-    StreamSubscription<Event> subscription = FirebaseDatabase.instance
-        .reference()
-        .child("Users")
-        .child(accountKey)
-        .child("phoneNo")
-        .onValue
-        .listen((Event event) {
-      String name = event.snapshot.value as String;
-      if (name == null) {
-        name = "sh";
-      }
-      onData(name);
-    });
-
-    return subscription;
-  }
-
-  void checkPaidUser() async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    DataSnapshot snapshot = await FirebaseDatabase.instance
-        .reference()
-        .child('users')
-        .child(user.uid)
-        .child('paid')
-        .once();
-
-    if (snapshot.value != null) paidUser = snapshot.value;
-  }
 }
 
 _addPoints(int boughtPoints) async {
@@ -183,5 +148,5 @@ _addPoints(int boughtPoints) async {
 
 Future<String> _getAccountKey() async {
   FirebaseUser user = await FirebaseAuth.instance.currentUser();
-  return user.uid;
+  return user == null ? null : user.uid;
 }

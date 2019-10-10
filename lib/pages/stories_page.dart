@@ -73,6 +73,10 @@ class _StoriesPageState extends State<StoriesPage> {
                       SizedBox(
                         height: 30.0,
                       ),
+                      _epicTitle("New Stories coming every weekend!"),
+                      SizedBox(
+                        height: 18.0,
+                      ),
                     ],
                   ))));
   }
@@ -394,7 +398,8 @@ class _StoriesPageState extends State<StoriesPage> {
       : description;
 
   void openStory(story) async {
-    if (paidUser) {
+    bool paidUse = await paidUser();
+    if (paidUse) {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => ViewChats(
               story['title'],
@@ -402,7 +407,7 @@ class _StoriesPageState extends State<StoriesPage> {
                   ? 1
                   : preferences.getInt(story['title']),
               story['totalEpisodes'],
-              story['image'])));
+              story['image'], story['genre'])));
     } else {
       FirebaseUser user = await FirebaseAuth.instance.currentUser();
       DataSnapshot snapshot = await FirebaseDatabase.instance
@@ -426,7 +431,7 @@ class _StoriesPageState extends State<StoriesPage> {
 
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => ViewChats(
-                  story['title'], 1, story['totalEpisodes'], story['image'])));
+                  story['title'], 1, story['totalEpisodes'], story['image'], story['genre'])));
         });
       } else {
         Navigator.of(context).push(MaterialPageRoute(
@@ -436,7 +441,7 @@ class _StoriesPageState extends State<StoriesPage> {
                     ? 1
                     : preferences.getInt(story['title']),
                 story['totalEpisodes'],
-                story['image'])));
+                story['image'], story['genre'])));
       }
     }
   }

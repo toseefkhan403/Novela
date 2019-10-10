@@ -14,8 +14,8 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="Novella"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Novela"
+        android:icon="@mipmap/ic_novela">
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

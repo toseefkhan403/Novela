@@ -355,7 +355,7 @@ class _EditChatsState extends State<EditChats>
         );
 
       case 'image':
-        return ImageStatefulWidget(isRight, data);
+        return ImageStatefulWidget(isRight, data, "Horror");
 
       default:
         return Container(

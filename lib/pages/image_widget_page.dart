@@ -1,14 +1,16 @@
 import 'dart:ui';
 import 'package:arctic_pups/pay_us_money.dart';
 import 'package:arctic_pups/services.dart';
+import 'package:arctic_pups/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 
 class ImageStatefulWidget extends StatefulWidget {
   final bool isRight;
   final data;
+  final String genre;
 
-  ImageStatefulWidget(this.isRight, this.data);
+  ImageStatefulWidget(this.isRight, this.data, this.genre);
 
   @override
   _ImageStatefulWidgetState createState() => _ImageStatefulWidgetState();
@@ -21,11 +23,7 @@ class _ImageStatefulWidgetState extends State<ImageStatefulWidget> {
   @override
   void initState() {
 
-    if (paidUser){
-      setState(() {
-        _isUnlocked = true;
-      });
-    }
+    checkIfPaid();
     super.initState();
   }
 
@@ -49,7 +47,16 @@ class _ImageStatefulWidgetState extends State<ImageStatefulWidget> {
                   .toString()
                   .replaceAll('1', " ")
                   .toString()
-                  : widget.data['sent_by']),
+                  : widget.data['sent_by'],
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: widget.isRight
+                      ? kShrinePink500
+                      : (widget.genre == "Horror" ||
+                      widget.genre == "Thriller")
+                      ? Colors.tealAccent
+                      : kShrineBrown600,
+                ),),
             ),
 
             InkWell(
@@ -128,6 +135,16 @@ class _ImageStatefulWidgetState extends State<ImageStatefulWidget> {
         ),
       ),
     );
+  }
+
+  void checkIfPaid() async {
+
+    bool paidUse = await paidUser();
+    if (paidUse){
+      setState(() {
+        _isUnlocked = true;
+      });
+    }
   }
 }
 

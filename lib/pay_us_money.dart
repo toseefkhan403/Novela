@@ -542,7 +542,6 @@ class PayUsMoney {
 
   static void deliverThePurchase(PurchaseDetails purchase) async {
     print('delivering the purchase');
-    paidUser = true;
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     await FirebaseDatabase.instance
         .reference()

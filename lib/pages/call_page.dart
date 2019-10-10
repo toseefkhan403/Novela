@@ -100,11 +100,12 @@ class _CallState extends State<Call> {
                       children: <Widget>[
                         FloatingActionButton(
                           heroTag: 'btn2',
-                          onPressed: () {
+                          onPressed: () async {
                             Vibration.cancel();
                             FlutterRingtonePlayer.stop();
 
-                            if (paidUser){
+                            bool paidUse = await paidUser();
+                            if (paidUse){
                               setState(() {
                                 show = false;
                               });

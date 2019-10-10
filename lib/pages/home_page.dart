@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
                 ))),
         frontAction: SizedBox(width: 56.0),
           frontTitle: Center(
-              child: Text("Novella",
+              child: Text("Novela",
               style: TextStyle(
                 color: Colors.white,
               ))),
@@ -48,9 +48,10 @@ class _HomePageState extends State<HomePage> {
                 ListTile(
                   onTap: () async {
                     FirebaseUser user = await FirebaseAuth.instance.currentUser();
+                    DataSnapshot sn = await FirebaseDatabase.instance.reference().child("users").child(user.uid).child("paid").once();
                     showDialog(
                         context: context,
-                        builder: (context) => _myDialog(user.uid));
+                        builder: (context) => _myDialog(user.uid, sn.value));
                   },
                   title: Text('View your points'),
                   leading: Icon(
@@ -120,19 +121,18 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.white70,
                   ),
                 ),
-                ListTile(
-                  onTap: () async {
-
-                    Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (BuildContext context) => SharePage()));
-                  },
-                  title: Text('Add story'),
-                  leading: Icon(
-                    Icons.add_comment,
-                    color: Colors.white70,
-                  ),
-                ),
+//                ListTile(
+//                  onTap: () async {
+//                    Navigator.of(context).push(
+//                        MaterialPageRoute(
+//                            builder: (BuildContext context) => SharePage()));
+//                  },
+//                  title: Text('Add story'),
+//                  leading: Icon(
+//                    Icons.add_comment,
+//                    color: Colors.white70,
+//                  ),
+//                ),
               ],
             ),
           ),
@@ -149,7 +149,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Widget _myDialog(String uid) => Center(
+  Widget _myDialog(String uid, value) => Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
@@ -194,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: SelectableText(
-                        'Your userId: $uid',
+                        'Your userId: $uid ${value == null ? " " : "(Premium User 😃)"}',
                         style:
                             TextStyle(color: Colors.blueGrey, fontSize: 12.0),
                       ),

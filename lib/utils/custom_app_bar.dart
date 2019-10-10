@@ -3,11 +3,11 @@ import 'package:arctic_pups/utils/appbar_painter.dart';
 import 'package:flutter/material.dart';
 
 class DefaultAppBar extends StatefulWidget implements PreferredSizeWidget {
-  final String title, storyImage;
+  final String title, storyImage, genre;
   final int totalEpisodes, episodeNo;
 
-  DefaultAppBar(
-      this.title, this.totalEpisodes, this.episodeNo, this.storyImage);
+  DefaultAppBar(this.title, this.totalEpisodes, this.episodeNo, this.storyImage,
+      this.genre);
 
   @override
   Size get preferredSize => Size.fromHeight(56.0);
@@ -64,21 +64,18 @@ class _DefaultAppBarState extends State<DefaultAppBar>
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Stack(children: [
-
       AppBar(
-        centerTitle: true,
-        leading: GestureDetector(
-          onTapUp: onSearchTapUp,
-          child: IconButton(
-            icon: Icon(Icons.list, color: Colors.white),
+          centerTitle: true,
+          leading: GestureDetector(
+            onTapUp: onSearchTapUp,
+            child: IconButton(
+              icon: Icon(Icons.list, color: Colors.white),
+            ),
           ),
-        ),
-        title: Text(
-                '${widget.title.toString()} (Ep.${widget.episodeNo})',
-                style: TextStyle(fontSize: 16.0),
-              )
-      ),
-
+          title: Text(
+            '${widget.title.toString()} (Ep.${widget.episodeNo})',
+            style: TextStyle(fontSize: 16.0),
+          )),
       AnimatedBuilder(
         animation: _animation,
         builder: (context, child) {
@@ -92,71 +89,68 @@ class _DefaultAppBarState extends State<DefaultAppBar>
           );
         },
       ),
-      
       SafeArea(
         top: true,
         child: Container(
           child: Center(
             child: isInChoosingMode
-                ? (Row(
-                    children: <Widget>[
-                      IconButton(
-                          icon: Icon(
-                            Icons.arrow_back,
-                            color: Colors.black,
-                          ),
-                          onPressed: () {
-                            cancel();
-                          }),
-
-                        SizedBox(
-                          width: 55.0,
+                ? (Row(children: <Widget>[
+                    IconButton(
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: Colors.black,
                         ),
-
-                        Expanded(
-                          child: Row(
-                            children: <Widget>[
-                              IconButton(
-                                  icon: Icon(
-                                    Icons.remove_circle,
-                                    color: Colors.black,
-                                  ),
-                                  onPressed: () {
-                                    if (widget.episodeNo > 1) {
-                                      Navigator.of(context).pushReplacement(
-                                          MaterialPageRoute(
-                                              builder: (c) => ViewChats(
-                                                  widget.title,
-                                                  widget.episodeNo - 1,
-                                                  widget.totalEpisodes,
-                                              widget.storyImage)));
-                                    }
-                                  }),
-                              Chip(
-                                  label: Text(
-                                      'Episode ${widget.episodeNo} of ${widget.totalEpisodes}',
-                                      style: TextStyle(fontSize: 12.0))),
-                              IconButton(
-                                  icon: Icon(
-                                    Icons.add_circle,
-                                    color: Colors.black,
-                                  ),
-                                  onPressed: () {
-                                    if (widget.episodeNo < widget.totalEpisodes) {
-                                      Navigator.of(context).pushReplacement(
-                                          MaterialPageRoute(
-                                              builder: (c) => ViewChats(
-                                                  widget.title,
-                                                  widget.episodeNo + 1,
-                                                  widget.totalEpisodes,
-                                              widget.storyImage)));
-                                    }
-                                  }),
-                            ],
-                          ),
-                        )
-
-                      ]))
+                        onPressed: () {
+                          cancel();
+                        }),
+                    SizedBox(
+                      width: 55.0,
+                    ),
+                    Expanded(
+                      child: Row(
+                        children: <Widget>[
+                          IconButton(
+                              icon: Icon(
+                                Icons.remove_circle,
+                                color: Colors.black,
+                              ),
+                              onPressed: () {
+                                if (widget.episodeNo > 1) {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (c) => ViewChats(
+                                              widget.title,
+                                              widget.episodeNo - 1,
+                                              widget.totalEpisodes,
+                                              widget.storyImage,
+                                              widget.genre)));
+                                }
+                              }),
+                          Chip(
+                              label: Text(
+                                  'Episode ${widget.episodeNo} of ${widget.totalEpisodes}',
+                                  style: TextStyle(fontSize: 12.0))),
+                          IconButton(
+                              icon: Icon(
+                                Icons.add_circle,
+                                color: Colors.black,
+                              ),
+                              onPressed: () {
+                                if (widget.episodeNo < widget.totalEpisodes) {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (c) => ViewChats(
+                                              widget.title,
+                                              widget.episodeNo + 1,
+                                              widget.totalEpisodes,
+                                              widget.storyImage,
+                                              widget.genre)));
+                                }
+                              }),
+                        ],
+                      ),
+                    )
+                  ]))
                 : (Container()),
           ),
         ),
