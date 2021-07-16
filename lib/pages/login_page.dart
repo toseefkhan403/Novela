@@ -1,6 +1,8 @@
+import 'package:arctic_pups/pages/root_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:arctic_pups/utils/colors.dart';
+import 'package:arctic_pups/utils/backdrop.dart';
 import 'package:arctic_pups/base_auth.dart';
 import 'package:arctic_pups/main.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';

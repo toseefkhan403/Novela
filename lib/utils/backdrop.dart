@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
+import 'package:oktoast/oktoast.dart';
 
 const double _kFrontHeadingHeight = 32.0; // front layer beveled rectangle
 const double _kFrontClosedHeight = 92.0; // front layer height when closed
@@ -349,4 +350,35 @@ class _BackdropState extends State<Backdrop> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: _buildStack);
   }
+}
+
+//global helper functions
+List<Color> aquaGradients = [
+  Color(0xFF5AEAF1),
+  Color(0xFF8EF7DA),
+];
+
+showTopToast(String text) {
+  Widget widget = Container(
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+          begin: FractionalOffset.centerLeft,
+          stops: [0.2, 1],
+          colors: aquaGradients),
+      borderRadius: new BorderRadius.circular(26.0),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Text(
+        '$text',
+        style: TextStyle(fontSize: 18, fontFamily: 'Raleway'),
+      ),
+    ),
+  );
+
+  showToastWidget(
+    widget,
+    duration: Duration(seconds: 3),
+    position: ToastPosition.top,
+  );
 }

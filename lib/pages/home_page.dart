@@ -1,3 +1,4 @@
+import 'package:arctic_pups/pages/root_page.dart';
 import 'package:arctic_pups/pages/share_page.dart';
 import 'package:arctic_pups/main.dart';
 import 'package:arctic_pups/pages/stories_page.dart';
