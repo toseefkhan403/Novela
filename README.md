@@ -11,7 +11,7 @@ Built using Flutter and Firebase with awesome features.
 
 *Amazing UI with rich animations*
 
-*Integrated with Google Ads and Play store subscription*
+*Integrated with Google Ads and In-App Purchases*
 
 *Payment integration using Paytm API*
 
